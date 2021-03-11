@@ -19,6 +19,7 @@
 #include "config.h"
 #include "i18n.h"
 #include "sfx.h"
+#include <map>
 #include <string>
 #include <iostream>
 #include <cctype> // TODO: remove it later
@@ -85,7 +86,7 @@ const char * mapname = "Levels\\map_maybe\\map.lev";
 
 void RenderTile(bool reflect, int t, int x, int y, int cliplift=-1);
 
-int keyState[SDLK_LAST] = {0};
+std::map<int, int> keyState;
 
 String GetFilePath(const char* file, const char* flags)
 {
@@ -3716,9 +3717,9 @@ retry_pos:
 		else
 			UpdateKeys();
 
-		for (int i=0; i<SDLK_LAST; i++)
-			if (keyState[i])
-				keyState[i] = 1;
+		for (auto it = keyState.begin(); it != keyState.end(); it++)
+			if (it->second)
+				keyState[it->first] = 1;
 
 		if (activeMenu)
 			return;
@@ -3850,7 +3851,7 @@ retry_pos:
 		{
 			bool eat = activeMenu->KeyPressed(key, mod);
 			if (!activeMenu)
-				memset(keyState, 0, sizeof(keyState));
+				keyState.clear();
 			return eat;
 		}
 		else
@@ -3935,7 +3936,7 @@ retry_pos:
 		{
 			noMouse=1;
 			if (win && winFinal)
-				LoadMap(), memset(keyState, 0, sizeof(keyState));
+				LoadMap(), keyState.clear();
 			else
 				Input(-1);
 		}
