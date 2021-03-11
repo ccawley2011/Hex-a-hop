@@ -242,7 +242,8 @@ int main(int /*argc*/, char * /*argv*/[])
 	SDL_Flip(screen);
 */
 
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) < 0)
+		FATAL("Cannot initialize SDL", SDL_GetError());
 	if (!TextInit(base_path))
 		return 1;
 
