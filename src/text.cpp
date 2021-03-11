@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <errno.h>
+#include <iconv.h>
 #include "i18n.h"
 #include "text.h"
 #include "video.h"
