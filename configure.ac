@@ -12,8 +12,14 @@ AC_PROG_CXX
 
 AC_HEADER_STDC
 
+# Require at least this gettext version, but will take any later version too
+AM_GNU_GETTEXT_REQUIRE_VERSION([0.19.8])
+# We need the following macro due to backwards compatibility reasons. The
+# above macro is set unconditionally to the minimal version required, and
+# the below is set to 0.19.6, the first version introducing the
+# AM_GNU_GETTEXT_REQUIRE_VERSION macro.
+AM_GNU_GETTEXT_VERSION([0.19.6])
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.18])
 
 AC_CHECK_HEADERS(stdint.h windows.h)
 AC_CHECK_LIB(m, main)
