@@ -32,7 +32,8 @@ fi
 
 # Check for SDL.
 SDL_VERSION=1.2.0
-AM_PATH_SDL($SDL_VERSION, :, AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!]))
+PKG_CHECK_MODULES([SDL], [sdl >= $SDL_VERSION], [],
+		  [AC_MSG_ERROR([Cannot find SDL version $SDL_VERSION])])
 
 # Arguments.
 AC_ARG_ENABLE([debug], AS_HELP_STRING([--disable-debug],[Do not compile with debugging symbols]), [want_debug=$enableval], [want_debug=no])
@@ -55,16 +56,16 @@ else
 fi
 
 # Check for SDL_image.
-SDL_LIBS="$SDL_LIBS -lSDL_image"
-SDL_CFLAGS="$SDL_CFLAGS"
+PKG_CHECK_MODULES([SDL_image], [SDL_image], [],
+                  [AC_MSG_ERROR([Cannot find SDL_image library])])
 
 # Conditional sound compilation.
 if test "$want_sound" = yes; then
 	MAYBE_SOUND="sound"
 
 	# Check for SDL_mixer.
-	SDL_LIBS="$SDL_LIBS -lSDL_mixer"
-	SDL_CFLAGS="$SDL_CFLAGS"
+	PKG_CHECK_MODULES([SDL_mixer], [SDL_mixer], [],
+	                  [AC_MSG_ERROR([Cannot find SDL_mixer library])])
 else
 	MAYBE_SOUND=
 	SOUND_FLAGS="-DDISABLE_SOUND"
@@ -73,12 +74,17 @@ fi
 # Conditional Pango/TTF support.
 if test "$want_ttf" = yes; then
 	# Check for SDL_ttf.
-	SDL_LIBS="$SDL_LIBS -lSDL_ttf"
+	PKG_CHECK_MODULES([SDL_ttf], [SDL_ttf], [],
+	                  [AC_MSG_ERROR([Cannot find SDL_ttf library])])
 else
 	# Check for SDL_Pango.
-	SDL_LIBS="$SDL_LIBS -lSDL_Pango"
+	PKG_CHECK_MODULES([SDL_Pango], [SDL_Pango], [],
+	                  [AC_MSG_ERROR([Cannot find SDL_Pango library])])
 	TEXT_FLAGS="-DENABLE_PANGO"
 fi
+
+SDL_CFLAGS="$SDL_CFLAGS $SDL_Pango_CFLAGS $SDL_ttf_CFLAGS $SDL_image_CFLAGS $SDL_mixer_CFLAGS"
+SDL_LIBS="$SDL_LIBS $SDL_Pango_LIBS $SDL_ttf_LIBS $SDL_image_LIBS $SDL_mixer_LIBS"
 
 # Font path
 if test "$want_ttf" = yes -a "x$FONT_PATH" != x ; then
