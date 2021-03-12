@@ -50,9 +50,9 @@ struct Menu {
 
 	virtual bool KeyPressed(int key, int /*mod*/)
 	{
-		if (key=='w' || key==SDLK_UP || key==SDLK_KP8 || key=='q' || key=='e' || key==SDLK_KP7 || key==SDLK_KP9)
+		if (key=='w' || key==SDLK_UP || key==SDLK_KP_8 || key=='q' || key=='e' || key==SDLK_KP_7 || key==SDLK_KP_9)
 			Move(-1), noMouse=1;
-		else if (key=='s' || key==SDLK_DOWN || key==SDLK_KP2 || key=='a' || key=='d' || key==SDLK_KP1 || key==SDLK_KP3)
+		else if (key=='s' || key==SDLK_DOWN || key==SDLK_KP_2 || key=='a' || key=='d' || key==SDLK_KP_1 || key==SDLK_KP_3)
 			Move(1), noMouse=1;
 		else if (key==' ' || key==SDLK_RETURN)
 		{

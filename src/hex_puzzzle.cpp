@@ -3787,15 +3787,15 @@ retry_pos:
 		if (isMap && !editMode)
 		{
 
-			if ((keyState[SDLK_q] | keyState[SDLK_KP7]) & 2) keyboardp.x--;
-			else if ((keyState[SDLK_d] | keyState[SDLK_KP3]) & 2) keyboardp.x++;
-			else if ((keyState[SDLK_e] | keyState[SDLK_KP9]) & 2) keyboardp.x++, keyboardp.y--;
-			else if ((keyState[SDLK_a] | keyState[SDLK_KP1]) & 2) keyboardp.x--, keyboardp.y++;
-			else if ((keyState[SDLK_w] | keyState[SDLK_KP8] | keyState[SDLK_UP]) & 2) keyboardp.y--;
-			else if ((keyState[SDLK_s] | keyState[SDLK_KP2] | keyState[SDLK_DOWN]) & 2) keyboardp.y++;
+			if ((keyState[SDLK_q] | keyState[SDLK_KP_7]) & 2) keyboardp.x--;
+			else if ((keyState[SDLK_d] | keyState[SDLK_KP_3]) & 2) keyboardp.x++;
+			else if ((keyState[SDLK_e] | keyState[SDLK_KP_9]) & 2) keyboardp.x++, keyboardp.y--;
+			else if ((keyState[SDLK_a] | keyState[SDLK_KP_1]) & 2) keyboardp.x--, keyboardp.y++;
+			else if ((keyState[SDLK_w] | keyState[SDLK_KP_8] | keyState[SDLK_UP]) & 2) keyboardp.y--;
+			else if ((keyState[SDLK_s] | keyState[SDLK_KP_2] | keyState[SDLK_DOWN]) & 2) keyboardp.y++;
 			else if ((keyState[SDLK_LEFT]) & 2) keyboardp.x--, keyboardp.y+=keyboardp.x&1;
 			else if (((keyState[SDLK_RIGHT]) & 2)) { if (keyboardp.x < mapRightBound) keyboardp.y-=keyboardp.x&1, keyboardp.x++; }
-			else if ((keyState[SDLK_RETURN] | keyState[SDLK_KP5] | keyState[SDLK_SPACE] | keyState[SDLK_KP_ENTER]) & 2) 
+			else if ((keyState[SDLK_RETURN] | keyState[SDLK_KP_5] | keyState[SDLK_SPACE] | keyState[SDLK_KP_ENTER]) & 2) 
 			{
 				// Simulate user clicking on it...
 				Mouse(keyboardp.getScreenX()-scrollX, keyboardp.getScreenY()-scrollY, 0, 0, 1, 0, 0);
@@ -3822,12 +3822,12 @@ retry_pos:
 		{
 			static int usedDiag = 0;
 
-			if (keyState[SDLK_q] || keyState[SDLK_KP7]) HandleKey('q', 0);
-			else if (keyState[SDLK_w] || keyState[SDLK_KP8]) HandleKey('w', 0);
-			else if (keyState[SDLK_e] || keyState[SDLK_KP9]) HandleKey('e', 0);
-			else if (keyState[SDLK_a] || keyState[SDLK_KP1]) HandleKey('a', 0);
-			else if (keyState[SDLK_s] || keyState[SDLK_KP2]) HandleKey('s', 0);
-			else if (keyState[SDLK_d] || keyState[SDLK_KP3]) HandleKey('d', 0);
+			if (keyState[SDLK_q] || keyState[SDLK_KP_7]) HandleKey('q', 0);
+			else if (keyState[SDLK_w] || keyState[SDLK_KP_8]) HandleKey('w', 0);
+			else if (keyState[SDLK_e] || keyState[SDLK_KP_9]) HandleKey('e', 0);
+			else if (keyState[SDLK_a] || keyState[SDLK_KP_1]) HandleKey('a', 0);
+			else if (keyState[SDLK_s] || keyState[SDLK_KP_2]) HandleKey('s', 0);
+			else if (keyState[SDLK_d] || keyState[SDLK_KP_3]) HandleKey('d', 0);
 
 			else if (keyState[SDLK_UP] && keyState[SDLK_LEFT]) HandleKey('q', 0), usedDiag=1;
 			else if (keyState[SDLK_UP] && keyState[SDLK_RIGHT]) HandleKey('e', 0), usedDiag=1;
@@ -3926,13 +3926,13 @@ retry_pos:
 		if (isMap && !editMode)
 			return false;
 
-		else if (key==SDLK_KP9 || key=='e') Input(1), noMouse=1;
-		else if (key==SDLK_KP3 || key=='d') Input(2), noMouse=1;
-		else if (key==SDLK_KP1 || key=='a') Input(4), noMouse=1;
-		else if (key==SDLK_KP7 || key=='q') Input(5), noMouse=1;
-		else if (key==SDLK_KP8 || key=='w') Input(0), noMouse=1;
-		else if (key==SDLK_KP2 || (key=='s' && (((mod & (KMOD_CTRL|KMOD_ALT))==0)||!editMode))) Input(3), noMouse=1;
-		else if (key==SDLK_KP5 || key==SDLK_SPACE || key==SDLK_RETURN || key==SDLK_KP_ENTER)
+		else if (key==SDLK_KP_9 || key=='e') Input(1), noMouse=1;
+		else if (key==SDLK_KP_3 || key=='d') Input(2), noMouse=1;
+		else if (key==SDLK_KP_1 || key=='a') Input(4), noMouse=1;
+		else if (key==SDLK_KP_7 || key=='q') Input(5), noMouse=1;
+		else if (key==SDLK_KP_8 || key=='w') Input(0), noMouse=1;
+		else if (key==SDLK_KP_2 || (key=='s' && (((mod & (KMOD_CTRL|KMOD_ALT))==0)||!editMode))) Input(3), noMouse=1;
+		else if (key==SDLK_KP_5 || key==SDLK_SPACE || key==SDLK_RETURN || key==SDLK_KP_ENTER)
 		{
 			noMouse=1;
 			if (win && winFinal)

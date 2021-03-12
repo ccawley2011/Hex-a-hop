@@ -30,6 +30,17 @@
 #include <stdarg.h>
 #include "video.h"
 
+// Forward compatibility with SDL2
+#if SDL_MAJOR_VERSION < 2
+#define SDLK_KP_1 SDLK_KP1
+#define SDLK_KP_2 SDLK_KP2
+#define SDLK_KP_3 SDLK_KP3
+#define SDLK_KP_5 SDLK_KP5
+#define SDLK_KP_7 SDLK_KP7
+#define SDLK_KP_8 SDLK_KP8
+#define SDLK_KP_9 SDLK_KP9
+#endif
+
 #ifdef WIN32
 	// Trigger debugger
 //	#define FATAL(string, string2) do{__asm{int 3};}while(0)
