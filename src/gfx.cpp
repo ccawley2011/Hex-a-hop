@@ -247,6 +247,8 @@ int main(int /*argc*/, char * /*argv*/[])
 	if (!TextInit(base_path))
 		return 1;
 
+	InitScreen();
+
 	SDL_Surface* icon = IMG_Load(base_path + "/hex-a-hop-16.png");
 	if (icon)
 	{
@@ -256,8 +258,6 @@ int main(int /*argc*/, char * /*argv*/[])
 	}
 
 	InitSound(base_path);
-
-	InitScreen();
 
 	SDL_WarpMouse(SCREEN_W/2, SCREEN_H/2);
 
