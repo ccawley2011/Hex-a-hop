@@ -122,25 +122,10 @@ bool fullscreen = false;
 
 void InitScreen()
 {
-#ifdef USE_OPENGL
-	SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
-	SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );
-	SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
-	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16 );
-	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-
-//	printf("SDL_SetVideoMode (OpenGL)\n");
-	realScreen = SDL_SetVideoMode(
-		SCREEN_W, SCREEN_H, // Width, Height
-		0, // Current BPP
-		SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : 0) );
-#else
-//	printf("SDL_SetVideoMode (non-OpenGL)\n");
 	realScreen = SDL_SetVideoMode(
 		SCREEN_W, SCREEN_H, // Width, Height
 		0, // Current BPP
 		SDL_SWSURFACE | SDL_DOUBLEBUF | (fullscreen ? SDL_FULLSCREEN : 0) );
-#endif
 
 	if (screen)
 		SDL_FreeSurface(screen);
@@ -309,16 +294,12 @@ int main(int /*argc*/, char * /*argv*/[])
 			{
 				StateMakerBase::current->Render();
 
-				#ifdef USE_OPENGL
-					SDL_GL_SwapBuffers();
-				#else
-					if (screen && realScreen!=screen)
-					{
-						SDL_Rect r = {0,0,SCREEN_W,SCREEN_H};
-						SDL_BlitSurface(screen, &r, realScreen, &r);
-					}
-					SDL_Flip(realScreen);
-				#endif
+				if (screen && realScreen!=screen)
+				{
+					SDL_Rect r = {0,0,SCREEN_W,SCREEN_H};
+					SDL_BlitSurface(screen, &r, realScreen, &r);
+				}
+				SDL_Flip(realScreen);
 				videoExposed = 0;
 			}
 

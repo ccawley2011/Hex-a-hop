@@ -63,10 +63,6 @@ const char * mapname = "Levels\\map_maybe\\map.lev";
 
 //////////////////////////////////////////////////////
 
-
-
-#ifndef USE_OPENGL
-
 #include "state.h"
 
 #include "tiletypes.h"
@@ -4106,5 +4102,3 @@ MAKE_STATE(HexPuzzle, SDLK_F1, false);
 
 char * HexPuzzle::loadPtr = 0;
 char * HexPuzzle::endLoad = 0;
-
-#endif //USE_OPENGL

@@ -6,7 +6,6 @@ Replace the non-free sound files
 Later:
 
 Fix up and enable the edit mode by default
-Investigate the OpenGL thingi
 Investigate the tablet thingi
 get rid of cmake
 better source form for graphics

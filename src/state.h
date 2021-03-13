@@ -20,9 +20,6 @@
 #define __HHOP_STATE_H__
 
 #include <SDL.h>
-#ifdef USE_OPENGL
-#include <SDL_OpenGL.h>
-#endif
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>

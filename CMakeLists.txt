@@ -73,10 +73,6 @@ add_definitions(-DHAVE_CONFIG_H)
 # Find needed libraries
 ################################################################
 
-# find OpenGL headers and library
-find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIR})
-
 find_package(SDL REQUIRED)
 include_directories(${SDL_INCLUDE_DIR})
 
@@ -195,7 +191,6 @@ target_link_libraries(
 		${SDL_LIBRARY}
 		${SDLMIXER_LIBRARY}
 		${SDLTTF_LIBRARY}
-		${OPENGL_LIBRARIES}
 		SDLmain
 )
 
@@ -253,8 +248,6 @@ message( "  CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
 message( "  CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
 message( "  CMAKE_OSX_ARCHITECTURES = ${CMAKE_OSX_ARCHITECTURES}" )
 message( "  CMAKE_GENERATOR = ${CMAKE_GENERATOR}" )
-message( "  OPENGL_INCLUDE_DIR = ${OPENGL_INCLUDE_DIR}" )
-message( "  OPENGL_LIBRARY = ${OPENGL_LIBRARY}" )
 message( "  SDL_INCLUDE_DIR = ${SDL_INCLUDE_DIR}" )
 message( "  SDL_LIBRARY = ${SDL_LIBRARY}" )
 message( "  SDLMIXER_INCLUDE_DIR = ${SDLMIXER_INCLUDE_DIR}" )

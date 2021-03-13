@@ -7,7 +7,6 @@
 // #undef WIN32
 
 //#define USE_BBTABLET
-//#define USE_OPENGL
 
 #define SCREEN_W 640
 #define SCREEN_H 480
