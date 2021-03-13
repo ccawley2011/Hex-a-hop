@@ -218,15 +218,6 @@ int main(int /*argc*/, char * /*argv*/[])
 {
 	base_path = GetBasePath();
 
-/*
-	// Experimental - create a splash screen window whilst loading
-	SDL_Init(SDL_INIT_VIDEO);
-	screen = SDL_SetVideoMode( 200,200,0,SDL_NOFRAME );
-	SDL_Rect r = {0,0,200,200};
-	SDL_FillRect(screen, &r, SDL_MapRGB(screen->format, 0, 0, 50));
-	SDL_Flip(screen);
-*/
-
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) < 0)
 		FATAL("Cannot initialize SDL", SDL_GetError());
 	if (!TextInit(base_path))
