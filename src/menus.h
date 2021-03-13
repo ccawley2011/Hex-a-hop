@@ -247,7 +247,7 @@ struct HintMessage : public Menu
 		Print(OuterTextWindowRect.x+FONT_SPACING/4, y-FONT_SPACING, "%s", title);
 		/* TRANSLATORS: This specifies how the text in the help dialog should
 		   be aligned. Do *not* translate the text itself but use one of "left",
-       "center" or "right" (untranslated!). The default is "center". */
+		   "center" or "right" (untranslated!). The default is "center". */
 		std::string alignment = _("text alignment");
 		if (alignment == "right")
 			Print_Aligned(true, InnerTextWindowRect.x + InnerTextWindowRect.w - FONT_SPACING, y+FONT_SPACING/2, InnerTextWindowRect.w - 2*FONT_SPACING, msg, 2);

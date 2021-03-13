@@ -265,18 +265,18 @@ bool isMap=false, isRenderMap=false;
 int isFadeRendering=0;
 
 /*
-	 |--|     |--|   TILE_W1
-	 |--------|	 	 TILE_W2
-		|-----|	 	 TILE_WL
+	 |--|     |--|	 TILE_W1
+	 |--------|	 TILE_W2
+	    |-----|	 TILE_WL
 	 |-----------|	 TILE_W3
 
-		*-----*		-			-
-	   /       \    |TILE_H1	|TILE_H2
-	  /         \	|			|
-	 *           *	-			|
-	  \         /				|
-	   \       /				|
-		*-----*					-
+	    *-----*	-		-
+	   /       \	|TILE_H1	|TILE_H2
+	  /         \	|		|
+	 *           *	-		|
+	  \         /			|
+	   \       /			|
+	    *-----*			-
 
 	WL = sqrt(h1*h1 + w1*w1)
 	wl**2 = h1**2 + w1**2
@@ -1513,8 +1513,8 @@ struct HexPuzzle : public State
 
 			if (version >= 4) {
 				fread(&diff, sizeof(diff), 1, f);
-  			diff = SWAP32(diff);
-      }
+				diff = SWAP32(diff);
+			}
 			fread(bounds, sizeof(bounds), 1, f);
 			fread(&playerStart, sizeof(playerStart), 1, f);
 			playerStart.x = SWAP32(playerStart.x);
@@ -1728,9 +1728,9 @@ struct HexPuzzle : public State
 	char* ReadAll(FILE* f)
 	{
 		int size;
-    // FIXME: According to http://userpage.fu-berlin.de/~ram/pub/pub_jf47ht20Ht/c_faq_de
-    // undefined for binary streams! (POSIX does not differ between ascii and binary, so
-    // we are on the save side in Linux)
+		// FIXME: According to http://userpage.fu-berlin.de/~ram/pub/pub_jf47ht20Ht/c_faq_de
+		// undefined for binary streams! (POSIX does not differ between
+		// ascii and binary, so we are on the save side in Linux).
 		fseek(f, 0, SEEK_END);
 		size = ftell(f);
 		fseek(f, 0, SEEK_SET);
@@ -2541,13 +2541,20 @@ struct HexPuzzle : public State
 				if (numUndo>1 && time < undo[0].time)
 					v[0]=v[1]=v[2]=0;
 	#ifdef EDIT
-        /* TRANSLATORS: Anti-Ice are pickups, which turn ice plates into solid
-           plates once you step on them. Each pickup changes one ice plate */
+				/*
+				 * TRANSLATORS: Anti-Ice are pickups, which
+				 * turn ice plates into solid plates once you
+				 * step on them. Each pickup changes one ice
+				 * plate.
+				 */
 				Print(0,0,_("Anti-Ice: %d"), v[0]);
 				Print(0,FONT_SPACING,_("Jumps: %d"), v[1]);
 				Print(0,FONT_SPACING*2,_("Score: %d (%d)"), v[2], player_score);
-        /* TRANSLATORS: Par is similar to golf, a pre defined score which you
-           can attempt to beat */
+				/*
+				 * TRANSLATORS: Par is similar to golf, a
+				 * pre-defined score which you can attempt to
+				 * beat.
+				 */
 				Print(0,FONT_SPACING*3,_("Par:   %d"), levelPar);
 				Print(0,FONT_SPACING*4,_("Diff:  %d"), levelDiff);
 	#else

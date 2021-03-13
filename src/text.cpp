@@ -54,7 +54,8 @@ static std::vector<std::string> TextWrapString(char* str, int width, bool split)
 		else if (split && tmp == ' ' && end[1] == ' ')
 		{
 			// Double space break.
-			// FIXME: Should really get rid of this and just use newlines.
+			// FIXME: Should really get rid of this and just use
+			// newlines.
 			lines.push_back(std::string(start));
 			//lines.push_back(std::string(""));
 			start = end;
@@ -119,7 +120,8 @@ static void TextPrintRAW(int x, int y, const char* str)
 
 static SDLPango_Context *context = 0;
 
-/// determine length of longest line with current font (wrapping allowed if text_width != -1)
+/// Determine length of longest line with current font (wrapping allowed if
+/// text_width != -1).
 static int SDLPangoTextHeight(const std::string &text_utf8, int text_width)
 {
 	// SDLPango_SetMinimumSize limits indeed the maximal size! See
@@ -183,16 +185,16 @@ static void Print_Pango_Aligned(int x, int y, int width, const std::string &text
 	if (real_width>width)
 		SDLPango_SetMinimumSize(context, real_width, 0);
 
-  SDLPango_Alignment alignment;
-  if (align==0)
-    alignment = SDLPANGO_ALIGN_LEFT;
-  else if (align==2) {
-    alignment = SDLPANGO_ALIGN_RIGHT;
-    x -= width;
-  } else {
-    alignment = SDLPANGO_ALIGN_CENTER;
-    x -= width/2;
-  }
+	SDLPango_Alignment alignment;
+	if (align==0)
+		alignment = SDLPANGO_ALIGN_LEFT;
+	else if (align==2) {
+		alignment = SDLPANGO_ALIGN_RIGHT;
+		x -= width;
+	} else {
+		alignment = SDLPANGO_ALIGN_CENTER;
+		x -= width/2;
+	}
 	// SDLPango_SetText_GivenAlignment is not (yet?) part of the official Pango
 	// distribution, see http://bugs.debian.org/437865
 	SDLPango_SetText_GivenAlignment(context, text_utf8.c_str(), -1, alignment);

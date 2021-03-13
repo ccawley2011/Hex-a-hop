@@ -29,22 +29,25 @@
 
 struct PackFile1
 {
-  /* Is it *NOT* save to interpret a byte stream as list of Entries!
-   * The alignment could increase the Entry size on some systems without attribute.
-   *
-   * It works on: i386, amd64, mips o32 ABI, powerPC
-   * Maybe it's also compiler dependent ...
-   * 
-   * See also http://c-faq.com/struct/padding.html,
-   * http://c-faq.com/strangeprob/ptralign.html and http://bugs.debian.org/442854
-   * (Need to refer to a C FAQ in a (so called) C++ program, argh ...)
-   * */
+	/* Is it *NOT* save to interpret a byte stream as list of Entries!
+	 * The alignment could increase the Entry size on some systems without
+	 * attribute.
+	 *
+	 * It works on: i386, amd64, mips o32 ABI, powerPC
+	 * Maybe it's also compiler dependent ...
+	 *
+	 * See also http://c-faq.com/struct/padding.html,
+	 * http://c-faq.com/strangeprob/ptralign.html and
+	 * http://bugs.debian.org/442854
+	 * (Need to refer to a C FAQ in a (so called) C++ program, argh ...)
+	 */
 	class Entry {
 		int32_t len;
 	public:
-		// an array of size 1 (no char* pointer!) is saved after len,
-		// accessing name[0] should (but doesn't always) fit the first byte after len
-		// See e.g. http://c-faq.com/aryptr/index.html 
+		// An array of size 1 (no char* pointer!) is saved after len,
+		// accessing name[0] should (but doesn't always) fit the first
+		// byte after len.
+		// See e.g. http://c-faq.com/aryptr/index.html
 		char name[1];
 
 		Entry* GetNext()

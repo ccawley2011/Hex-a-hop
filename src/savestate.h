@@ -165,7 +165,8 @@ class SaveState
 	};
 
 	struct General {
-    /// Change big endian data into little endian data, do nothing on little endian systems
+		// Change big endian data into little endian data, do nothing
+		// on little endian systems.
 		void SwapBytes()
 		{
 			scoringOn = SWAP32(scoringOn);
