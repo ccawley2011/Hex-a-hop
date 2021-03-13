@@ -76,9 +76,9 @@ const char * mapname = "Levels\\map_maybe\\map.lev";
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#ifndef PATH_MAX 
-#define PATH_MAX 4096 
-#endif 
+#ifndef PATH_MAX
+#define PATH_MAX 4096
+#endif
 
 void RenderTile(bool reflect, int t, int x, int y, int cliplift=-1);
 
@@ -100,7 +100,7 @@ String GetFilePath(const char* file, const char* flags)
 			struct passwd *pw = getpwuid(getuid());
 			home = pw->pw_dir;
 		}
-		if (home) 
+		if (home)
 		{
 			char save_path[PATH_MAX];
 			snprintf(save_path, sizeof(save_path), "%s/.hex-a-hop", home);
@@ -250,7 +250,7 @@ void ChangeSuffix(char* filename, char* newsuffix)
 {
 	int len = strlen(filename);
 	int i = len-1;
-	while (i>=0 && filename[i]!='\\' && filename[i]!='.' && filename[i]!='/') 
+	while (i>=0 && filename[i]!='\\' && filename[i]!='.' && filename[i]!='/')
 		i--;
 	if (filename[i]=='.')
 		strcpy(filename+i+1, newsuffix);
@@ -282,7 +282,7 @@ int isFadeRendering=0;
 	wl**2 = h1**2 + w1**2
 
 	w1 = sin60.wL
-	
+
 */
 
 #if 1
@@ -329,14 +329,14 @@ int Peek(SDL_Surface* i, int x, int y)
 		p = (int)((unsigned char*)i->pixels)[i->pitch*y + x*BytesPerPixel]
 		  | (int)((unsigned char*)i->pixels)[i->pitch*y + x*BytesPerPixel] << 8
 		  | (int)((unsigned char*)i->pixels)[i->pitch*y + x*BytesPerPixel] << 16;
-	
+
 	return p;
 }
 bool IsEmpty(SDL_Surface* im, int x, int y, int w, int h)
 {
 	for (int i=x; i<x+w; i++)
 		for (int j=y; j<y+h; j++)
-			if (Peek(im,i,j) != Peek(im,0,im->h-1)) 
+			if (Peek(im,i,j) != Peek(im,0,im->h-1))
 				return false;
 	return true;
 }
@@ -383,7 +383,7 @@ struct Pos{
 	int32_t x,y;
 	Pos() : x(0), y(0) {}
 	Pos(int a, int b) : x(a), y(b) {}
-	bool operator == (Pos const & p) const 
+	bool operator == (Pos const & p) const
 	{
 		return x==p.x && y==p.y;
 	}
@@ -413,10 +413,10 @@ struct Pos{
 		x -= tx * TILE_W2;
 
 		if (x < TILE_W1 && y < TILE_H1)
-			if (x*TILE_H1 + y * TILE_W1 < TILE_H1*TILE_W1)  
+			if (x*TILE_H1 + y * TILE_W1 < TILE_H1*TILE_W1)
 				tx--;
 		if (x < TILE_W1 && y > TILE_H1)
-			if (x*TILE_H1 + (TILE_H2-y) * TILE_W1 < TILE_H1*TILE_W1)  
+			if (x*TILE_H1 + (TILE_H2-y) * TILE_W1 < TILE_H1*TILE_W1)
 				tx--, ty++;
 
 		return Pos(tx, ty);
@@ -440,7 +440,7 @@ class RenderObject
 	int numStages;
 	int maxStages;
 	int currentStage;
-public: 
+public:
 	double seed;
 	double currentTime;
 private:
@@ -498,14 +498,14 @@ public:
 	}
 	void Render(double t, bool reflect)
 	{
-		if (!Active(t)) 
+		if (!Active(t))
 			return;
 		UpdateCurrent(t);
 		stage[currentStage]->Render(this, t - time[currentStage], reflect);
 	}
 	int GetDepth(double t)
 	{
-		if (!Active(t)) 
+		if (!Active(t))
 			return -1;
 		UpdateCurrent(t);
 		return stage[currentStage]->GetDepth(t - time[currentStage]);
@@ -536,7 +536,7 @@ public:
 	void Add(RenderStage* s, double t)
 	{
 		int i=0;
-		
+
 		if (currentStage<numStages && time[currentStage]<=t)
 			i = currentStage;
 
@@ -720,13 +720,13 @@ void RenderTile(bool reflect, int t, int x, int y, int cliplift)
 			dst.x += TILE_W1;
 			SDL_BlitSurface(tileGraphics, &src, screen, &dst);
 		}
-	}	
+	}
 }
 void RenderGirl(bool reflect, int r, int frame, int x, int y, int h)
 {
 	int sx = r * 64;
 	int sy = frame * 80*2;
-	if (reflect) 
+	if (reflect)
 		y += TILE_H_REFLECT_OFFSET+20+h, sy += 80;
 	else
 		y -= h;
@@ -740,7 +740,7 @@ struct ItemRender : public RenderStage
 	int item;
 	Pos p;
 	int water;
-	
+
 	ItemRender(int i2, int _water, Pos const & _p) :  item(i2), p(_p), water(_water)
 	{}
 
@@ -756,7 +756,7 @@ struct ItemRender : public RenderStage
 			return;
 
 		int y = -5 + (int)Translate(r->seed, r->currentTime + time);
-		if (reflect) 
+		if (reflect)
 			y=-y;
 		if (!reflect && !water)
 			RenderTile( false, TILE_SPHERE, p.getScreenX(), p.getScreenY());
@@ -773,7 +773,7 @@ void RenderFade(double time, int dir, int seed)
 	int ys=0;
 	srand(seed);
 	for(int x=rand()%22-11; x<SCREEN_W+22; x+=32, ys ^= 1)
-	{			
+	{
 		for (int y=ys*20; y<SCREEN_H+30; y+=40)
 		{
 			double a = (rand()&0xff)*dir;
@@ -790,7 +790,7 @@ struct FadeRender : public RenderStage
 {
 	int seed;
 	int dir;
-	FadeRender(int d=-1) : seed(rand()), dir(d) 
+	FadeRender(int d=-1) : seed(rand()), dir(d)
 	{
 		isFadeRendering = d;
 	}
@@ -830,7 +830,7 @@ struct LevelSelectRender : public RenderStage
 #ifdef MAP_EDIT_HACKS
 	int magic;
 #endif
-	
+
 	LevelSelectRender(Pos const & _p, int i2, int adj) : p(_p), item(i2), adj(adj)
 	{}
 
@@ -858,8 +858,8 @@ struct LevelSelectRender : public RenderStage
 	if (!reflect)
 	{
 		RenderTile(
-			reflect, 
-			TILE_SPHERE + item-1, 
+			reflect,
+			TILE_SPHERE + item-1,
 			p.getScreenX(), p.getScreenY()
 		);
 
@@ -882,11 +882,11 @@ struct ItemCollectRender : public ItemRender
 };
 
 int GetLiftHeight(double time, int t)
-{	
+{
 	if (t==LIFT_UP)
 		time = LIFT_TIME-time;
 	time = time / LIFT_TIME;
-	if (time > 1) 
+	if (time > 1)
 		time = 1;
 	if (time < 0)
 		time = 0;
@@ -905,7 +905,7 @@ struct TileRender : public RenderStage
 	int t;
 	Pos p;
 	double specialDuration;
-	
+
 	TileRender(int i, Pos const & _p, int _special=0) : special(_special), t(i), p(_p), specialDuration(LASER_LINE_TIME)
 	{}
 
@@ -941,7 +941,7 @@ struct TileRender : public RenderStage
 			int base = ((t==EMPTY) ? TILE_LASER_0 : TILE_LASER_REFRACT);
 			if (t==EMPTY && time >= specialDuration-LASER_FADE_TIME)
 				base = TILE_LASER_FADE_0;
-			
+
 			int foo=special;
 			for(int i=0; foo; foo>>=1, i++)
 				if (foo & 1)
@@ -1053,7 +1053,7 @@ struct ExplosionRender : public RenderStage
 		seed = rand();
 	}
 
-	virtual int GetDepth(double /*time*/) 
+	virtual int GetDepth(double /*time*/)
 	{
 		return p.x + p.y*2;
 	}
@@ -1081,7 +1081,7 @@ struct ExplosionRender : public RenderStage
 			//if (yo > 0) yo=-yo;//continue;
 			if (type)
 			{
-				
+
 				if (yo > 0)
 				{
 					if (!reflect && ys<-60)
@@ -1092,16 +1092,16 @@ struct ExplosionRender : public RenderStage
 						{
 							x = p.getScreenX() + int(xs * (1+ct*(2+power)));
 							RenderTile(
-								reflect, 
-								time > ct+3*T ? TILE_SPLASH_3 : time > ct+2*T ? TILE_SPLASH_2 :  time > ct+T ?  TILE_SPLASH_1 : TILE_WATER_PARTICLE+1, 
+								reflect,
+								time > ct+3*T ? TILE_SPLASH_3 : time > ct+2*T ? TILE_SPLASH_2 :  time > ct+T ?  TILE_SPLASH_1 : TILE_WATER_PARTICLE+1,
 								x, y);
 						}
 					}
 				}
 				else
 					RenderTile(
-						reflect, 
-						time - i*0.003 < 0.2 ? TILE_WATER_PARTICLE+1 : TILE_WATER_PARTICLE, 
+						reflect,
+						time - i*0.003 < 0.2 ? TILE_WATER_PARTICLE+1 : TILE_WATER_PARTICLE,
 						x, y+(reflect?-1:1)*yo);
 			}
 			else
@@ -1110,8 +1110,8 @@ struct ExplosionRender : public RenderStage
 					;
 				else
 					RenderTile(
-						reflect, 
-						i<q-20 || time<0.3 ? TILE_LASER_HEAD : i<q-10 || time<0.6 ? TILE_FIRE_PARTICLE_1 : TILE_FIRE_PARTICLE_2, 
+						reflect,
+						i<q-20 || time<0.3 ? TILE_LASER_HEAD : i<q-10 || time<0.6 ? TILE_FIRE_PARTICLE_1 : TILE_FIRE_PARTICLE_2,
 						x, y+(reflect?-1:1)*yo);
 			}
 		}
@@ -1180,7 +1180,7 @@ struct BuildRender : public RenderStage
 	{
 		if (time >= BUILD_TIME)
 			RenderTile(reflect, height ^ reverse ? (type ? COLLAPSE_DOOR2 : COLLAPSE_DOOR) : (type ? COLLAPSABLE2 : COLLAPSABLE), p.getScreenX(), p.getScreenY());
-		else 
+		else
 		{
 			if (height)
 				RenderTile(reflect, type ? COLLAPSABLE2 : COLLAPSABLE, p.getScreenX(), p.getScreenY());
@@ -1195,7 +1195,7 @@ struct BuildRender : public RenderStage
 					double offset = (dist*0.7) + 0.3;
 					int x = from.getScreenX() + int((p.getScreenX()-from.getScreenX()) * offset);
 					int y = from.getScreenY() + int((p.getScreenY()-from.getScreenY()) * offset - dist*(1-dist)*(TILE_HUP*4));
-					RenderTile(reflect, TILE_GREEN_FRAGMENT, x, y);				
+					RenderTile(reflect, TILE_GREEN_FRAGMENT, x, y);
 				}
 				dist -= 1;
 			}
@@ -1234,10 +1234,8 @@ struct BuildRender : public RenderStage
 					if (yo < TILE_HUP/2)
 					{
 						RenderTile(reflect, type ? COLLAPSE_DOOR2 : COLLAPSE_DOOR, p.getScreenX(), p.getScreenY()+(reflect ? -yo : yo), yo);
-					
 					}
 					RenderTile(reflect, type ? COLLAPSABLE2 : COLLAPSABLE, p.getScreenX(), p.getScreenY());
-					
 				}
 			}
 		}
@@ -1253,7 +1251,7 @@ struct PlayerRender : public RenderStage
 	int type;
 	double speed;
 	bool dead;
-	
+
 	PlayerRender(Pos a, int h, bool d) : p(a), target(a), p_h(h), target_h(h), r(3), type(0), speed(0), dead(d)
 	{}
 	PlayerRender(int _r, Pos a, int h1, Pos t, int h2, bool d) : p(a), target(t), p_h(h1), target_h(h2), r(_r), type(0), speed(JUMP_TIME), dead(d)
@@ -1296,12 +1294,12 @@ struct PlayerRender : public RenderStage
 		}
 		else
 		{
-			
 			int dist = MAX(ABS(p.x-target.x), ABS(p.y-target.y));
 			int arc = dist*dist;
 			int h1 = p_h * TILE_HUP2;;
 			int h2 = target_h * TILE_HUP2;
-			if (dist==2 && h1!=0) 
+
+			if (dist==2 && h1!=0)
 			{
 				arc += h2 ? 1 : 3;
 				h1 = 0;
@@ -1351,7 +1349,7 @@ struct PlayerRender : public RenderStage
 
 			RenderGirl(
 				reflect,
-				r, frame, 
+				r, frame,
 				(int)(x+(x2-x)*f),
 				(int)(y+(y2-y)*f),
 				h
@@ -1359,7 +1357,7 @@ struct PlayerRender : public RenderStage
 
 		}
 	/*	RenderTile(
-			dead ? TILE_SPHERE_OPEN : TILE_SPHERE_DONE, 
+			dead ? TILE_SPHERE_OPEN : TILE_SPHERE_DONE,
 			(int)(x+(x2-x)*f),
 			(int)(y+(y2-y)*f),
 			true
@@ -1378,7 +1376,7 @@ struct HexPuzzle : public State
 			Pos p;
 			Tile t;
 			int item;
-			
+
 			TileChange()
 			{}
 			TileChange(Pos _p, Tile _t, int _i) : p(_p), t(_t), item(_i)
@@ -1405,8 +1403,8 @@ struct HexPuzzle : public State
 				if (t[i].p==tc.p)
 					return;
 			if (numT>=MAX_TILECHANGE)
-				FATAL("numT>=MAX_TILECHANGE"); 
-			else 
+				FATAL("numT>=MAX_TILECHANGE");
+			else
 				t[numT++] = tc;
 		}
 		void New(Dir pmove, Pos & pp, int* items, double t, int sc)
@@ -1473,7 +1471,7 @@ struct HexPuzzle : public State
 			f += 7;
 		if (currentLevelInfo!=0 && strcmp(currentLevelInfo->file, f)==0)
 			return currentLevelInfo;
-		
+
 		if (f[0]=='_')
 		{
 			int t = atoi(f+1);
@@ -1532,7 +1530,7 @@ struct HexPuzzle : public State
 					int t = comp & 0x1f;
 					int item = (comp >> 5) & 3;
 					for (int i=highval+1; i<sizeof(value_order)/sizeof(value_order[0]); i++)
-						if (t!=0 && t==value_order[i] 
+						if (t!=0 && t==value_order[i]
 						 ||	item!=0 && item==(value_order[i]>>8))
 							highval = i;
 				}
@@ -1668,7 +1666,7 @@ struct HexPuzzle : public State
 
 				if (isMap)
 					t = EMPTY;
-				
+
 				//if (t)
 					renderer(p).Add(new TileRender(t, p), time);
 			}
@@ -1677,7 +1675,6 @@ struct HexPuzzle : public State
 			renderer.player.Add(new PlayerRender(player, GetHeight(player), dead), time);
 		else
 			renderer.player.Add(new PlayerRender(Pos(-100,-100), 0, true), time);
-			
 
 		int bounds[4] = {player.getScreenX(),player.getScreenX(),player.getScreenY(),player.getScreenY()};
 		for (int i=0; i<MAP_SIZE; i++)
@@ -1710,7 +1707,7 @@ struct HexPuzzle : public State
 			sx = (bounds[1] + bounds[0] - SCREEN_W) / 2 - TILE_W3/2;
 			sy = (bounds[3] + bounds[2] - SCREEN_H) / 2 - TILE_H2/2;
 		}
-		if (isMap) 
+		if (isMap)
 		{
 			initScrollX = sx;
 			initScrollY = sy;
@@ -1774,7 +1771,7 @@ struct HexPuzzle : public State
 
 		int32_t par = 99999, diff = 0;
 		int16_t version;
-		
+
 		if (!f && !loadPtr)
 			return getdiff ? diff : par;
 
@@ -1801,7 +1798,7 @@ struct HexPuzzle : public State
 
 	bool LoadSave(const char * filename, bool save)
 	{
-		if (!filename) 
+		if (!filename)
 			return false;
 
 		if (!save)
@@ -1821,7 +1818,7 @@ struct HexPuzzle : public State
 				if (currentFile != filename) // equal (overlapping) strings are forbidden
 					strcpy(currentFile, filename);
 				currentLevelInfo = GetLevelInfo(currentFile);
-				
+
 				loadPtr = (char*)e->Data();
 				endLoad = loadPtr + e->DataLen();
 				_LoadSave(NULL, save);
@@ -1860,7 +1857,7 @@ struct HexPuzzle : public State
 				return true;
 			}
 		#endif
-			
+
 		return false;
 	}
 
@@ -2045,7 +2042,7 @@ struct HexPuzzle : public State
 		if (isMap)
 		{
 			progress.general.completionPercentage = numComplete*100/numLevels;
-			progress.general.masteredPercentage = numMastered*100/numLevels;			
+			progress.general.masteredPercentage = numMastered*100/numLevels;
 			LoadSaveProgress(true);
 		}
 	}
@@ -2108,7 +2105,6 @@ struct HexPuzzle : public State
 		delete [] special[p.x][p.y];
 		if (!use_pointer && d)
 		{
-			
 			special[p.x][p.y] = new char [strlen(d) + 1];
 			strcpy(special[p.x][p.y], d);
 		}
@@ -2138,15 +2134,15 @@ struct HexPuzzle : public State
 		if (l && l->Completed())
 		{
 			t = 3;
-			
-			if (recurse) 
+
+			if (recurse)
 				return t;
 
 			int par = GetPar(x);
 			if (progress.general.scoringOn && l->PassesPar( par ))
 				t = l->BeatsPar( par ) ? 40 : 4;
 		}
-		if (recurse) 
+		if (recurse)
 			return t;
 
 		int adj=0;
@@ -2194,7 +2190,7 @@ struct HexPuzzle : public State
 				}
 			}
 		}
-		
+
 		if (type==0) // Init & count levels
 		{
 			if (x[0]=='_')
@@ -2266,7 +2262,7 @@ struct HexPuzzle : public State
 				}
 			}
 		}
-		
+
 		if (type==1 && x[0]!='_') // Clicked on
 		{
 			int t = GetLevelState(p);
@@ -2374,9 +2370,9 @@ struct HexPuzzle : public State
 					c |= i0 << 24;
 				else
 					c |= 0xff000000;
-				
+
 				fwrite(&c, sizeof(c), 1, f);
-				
+
 				if (i0 >= 0xff)
 					fwrite(&i0, sizeof(i0), 1, f);
 			}
@@ -2386,7 +2382,7 @@ struct HexPuzzle : public State
 
 			bmp = out;
 		}
-#endif			
+#endif
 
 		g = IMG_Load(GetFilePath(bmp, "rb"));
 
@@ -2431,7 +2427,7 @@ struct HexPuzzle : public State
 		memset(map, 0, sizeof(map));
 		memset(map_item, 0, sizeof(map_item));
 		memset(special, 0, sizeof(special));
-		
+
 		LoadProgress();
 
 //		player = Pos(1,11);
@@ -2451,7 +2447,7 @@ struct HexPuzzle : public State
 				return;
 			}
 		#endif
-		
+
 		//editMode = false;
 		LoadSave(mapname, false);
 		PlayMusic(HHOP_MUSIC_MAP);
@@ -2588,7 +2584,7 @@ struct HexPuzzle : public State
 				{
 					progress.general.endSequence = 1;
 					LoadSaveProgress(true);
-					
+
 					new Fader(-1, -5, 0.3);
 				}
 	#endif
@@ -2664,7 +2660,7 @@ struct HexPuzzle : public State
 				winFinal = 1;
 			}
 			else
-				winFinal = 0;		
+				winFinal = 0;
 
 			// Move up "level complete" writing so it doesn't feel like everything's ground to a halt...
 			if (win && numUndo > 0 && time > undo[numUndo-1].endTime && !winFinal)
@@ -2701,7 +2697,7 @@ struct HexPuzzle : public State
 		const int num = Count(t) + Count(t2);
 		if (t==t2 || num==0)
 			return Count(t);	// Nothing to do...
-		
+
 		int count=0;
 		for (int x=0; x<MAP_SIZE; x++)
 			for (int y=0; y<MAP_SIZE; y++)
@@ -2768,7 +2764,7 @@ struct HexPuzzle : public State
 		if (s.x!=_s.x || s.y!=_s.y)
 		{
 			_s = s;
-		
+
 			char* sp = GetSpecial(s);
 #ifdef EDIT
 			char tmp[1000];
@@ -2808,12 +2804,12 @@ struct HexPuzzle : public State
 		}
 	}
 
-	virtual void Mouse(int x, int y, int dx, int dy, int button_pressed, int button_released, int button_held) 
+	virtual void Mouse(int x, int y, int dx, int dy, int button_pressed, int button_released, int button_held)
 	{
 		if (activeMenu)
 		{
 			activeMenu->Mouse(x,y,dx,dy,button_pressed,button_released,button_held);
-			return;	
+			return;
 		}
 
 		if (isFadeRendering)
@@ -2945,7 +2941,7 @@ struct HexPuzzle : public State
 				if(l)
 				{
 					FILE * f = file_open(l,"rb");
-					if (f) 
+					if (f)
 						fclose(f);
 					if (f)
 						SetSpecial(s, l);
@@ -3023,7 +3019,7 @@ struct HexPuzzle : public State
 	void Undo()
 	{
 		if (numUndo==0) return;
-		
+
 		UndoDone(); // Complete previous undo...
 
 		numUndo--;
@@ -3031,7 +3027,7 @@ struct HexPuzzle : public State
 		if (time > undo[numUndo].endTime)
 			time = undo[numUndo].endTime;
 		undoTime = undo[numUndo].time;
-		
+
 		undo[numUndo].Restore(this);
 
 		// Cancel all queued sounds.
@@ -3042,7 +3038,7 @@ struct HexPuzzle : public State
 	}
 	void UndoDone()
 	{
-		if (undoTime < 0) 
+		if (undoTime < 0)
 			return;
 		renderer.Reset(undoTime);
 		time = undoTime;
@@ -3115,7 +3111,7 @@ struct HexPuzzle : public State
 					for (i=0; i<numHits; i++)
 						if (hits[i]==p)
 							break;
-					if (i==numHits || 
+					if (i==numHits ||
 						(t==TRAP && (hitDir[i]&(1<<fd))==0)
 					   )
 					{
@@ -3133,7 +3129,7 @@ struct HexPuzzle : public State
 						}
 						if (t==TRAP)
 						{
-							int dirmask = 
+							int dirmask =
 								  1<<((fd+2) % MAX_DIR)
 								| 1<<((fd+MAX_DIR-2) % MAX_DIR);
 
@@ -3155,7 +3151,7 @@ struct HexPuzzle : public State
 //					fireTime += LASER_SEGMENT_TIME;
 				}
 			}
-			
+
 //			renderer().Add(new LaserRender(newpos, fd, range), time);
 		}
 
@@ -3336,7 +3332,7 @@ struct HexPuzzle : public State
 				QueueSound(HHOP_SOUND_DISINTEGRATE, time);
 				SetTile(oldpos, COLLAPSABLE, false);
 				renderer(oldpos).Add(new DisintegrateRender(oldpos, 0, 1), time);
-				player_score += 10; 
+				player_score += 10;
 				CheckFinished();
 				break;
 
@@ -3344,7 +3340,7 @@ struct HexPuzzle : public State
 				QueueSound(HHOP_SOUND_DISINTEGRATE, time);
 				SetTile(oldpos, COLLAPSE_DOOR, false);
 				renderer(oldpos).Add(new DisintegrateRender(oldpos, 1, 1), time);
-				player_score += 10; 
+				player_score += 10;
 				break;
 
 			case COLLAPSABLE3:
@@ -3357,7 +3353,7 @@ struct HexPuzzle : public State
 		int retry_pos_count=0;
 retry_pos:
 		retry_pos_count++;
-		
+
 		if (GetItem(newpos)==1)
 		{
 			QueueSound(HHOP_SOUND_FOUND_ANTIICE, time);
@@ -3538,13 +3534,13 @@ retry_pos:
 				QueueSound(HHOP_SOUND_TRAMPOLINE, time);
 
 				oldpos = newpos;
-				if (Collide(newpos + d, high)) 
+				if (Collide(newpos + d, high))
 					break;
-				if (Collide((newpos + d) + d, high) == 1) 
+				if (Collide((newpos + d) + d, high) == 1)
 					newpos = (newpos + d);
 				else
 					newpos = (newpos + d) + d;
-				if (tileSolid[GetTile(newpos)] == -1) 
+				if (tileSolid[GetTile(newpos)] == -1)
 					dead=1;
 				//player = newpos;
 				goto retry_pos;
@@ -3569,7 +3565,7 @@ retry_pos:
 					tmp = t2;
 				}
 				endAnimTime = MAX(endAnimTime, time+ROTATION_TIME);
-//				renderer(newpos).Add(new TileRotateRender(SPINNER, Dir(0), 0), time);					
+//				renderer(newpos).Add(new TileRotateRender(SPINNER, Dir(0), 0), time);
 			}
 			break;
 
@@ -3580,10 +3576,10 @@ retry_pos:
 				if (player_items[0]==0)
 				{
 					QueueSound(HHOP_SOUND_ICE, time);
-					if (tileSolid[GetTile(newpos + d)] == 1) 
+					if (tileSolid[GetTile(newpos + d)] == 1)
 						break;
 					newpos = newpos + d;
-					if (tileSolid[GetTile(newpos)] == -1) 
+					if (tileSolid[GetTile(newpos)] == -1)
 						dead=1;
 					//player = newpos;
 					goto retry_pos;
@@ -3631,7 +3627,7 @@ retry_pos:
 							break;
 						}
 					}
-					
+
 					renderer().Add(new LaserRender(newpos, fd, range), time);
 				}
 
@@ -3660,9 +3656,9 @@ retry_pos:
 				endAnimTime = MAX(endAnimTime, time);
 
 				time = _time;
-				
+
 				CheckFinished();
-*/				
+*/
 				break;
 			}
 		}
@@ -3673,7 +3669,7 @@ retry_pos:
 		{
 			QueueSound(HHOP_SOUND_DEATH, time);
 			win = false;
-			
+
 			PlayerRender* pr = new PlayerRender(player, 0, dead);
 			pr->speed = 0; // Don't sit around before disappearing!
 			renderer.player.Add(pr, time);
@@ -3698,7 +3694,7 @@ retry_pos:
 
 		undo[numUndo].endTime = endAnimTime;
 		numUndo++;
-		
+
 		return true;
 	}
 	void Update(double timedelta)
@@ -3774,7 +3770,7 @@ retry_pos:
 
 		if (!isMap && !editMode && undoTime < 0)
 		{
-			if (keyState[SDLK_z] || keyState[SDLK_BACKSPACE] || keyState[SDLK_u]) 
+			if (keyState[SDLK_z] || keyState[SDLK_BACKSPACE] || keyState[SDLK_u])
 			{
 				Undo();
 				return;
@@ -3791,7 +3787,7 @@ retry_pos:
 			else if ((keyState[SDLK_s] | keyState[SDLK_KP_2] | keyState[SDLK_DOWN]) & 2) keyboardp.y++;
 			else if ((keyState[SDLK_LEFT]) & 2) keyboardp.x--, keyboardp.y+=keyboardp.x&1;
 			else if (((keyState[SDLK_RIGHT]) & 2)) { if (keyboardp.x < mapRightBound) keyboardp.y-=keyboardp.x&1, keyboardp.x++; }
-			else if ((keyState[SDLK_RETURN] | keyState[SDLK_KP_5] | keyState[SDLK_SPACE] | keyState[SDLK_KP_ENTER]) & 2) 
+			else if ((keyState[SDLK_RETURN] | keyState[SDLK_KP_5] | keyState[SDLK_SPACE] | keyState[SDLK_KP_ENTER]) & 2)
 			{
 				// Simulate user clicking on it...
 				Mouse(keyboardp.getScreenX()-scrollX, keyboardp.getScreenY()-scrollY, 0, 0, 1, 0, 0);
@@ -3883,7 +3879,7 @@ retry_pos:
 #endif
 
 		if (0) {}
-		
+
 		else if ((key=='p' && !editMode) || key==SDLK_PAUSE || key==SDLK_ESCAPE)
 		{
 			noMouse = 1;
@@ -3891,9 +3887,9 @@ retry_pos:
 		}
 
 #ifdef EDIT
-		else if (key=='e' && (mod & KMOD_ALT)) 
+		else if (key=='e' && (mod & KMOD_ALT))
 			editMode = !editMode;
-		
+
 		else if (key=='p' && (mod & KMOD_ALT) && numUndo>0
 		      || key>='0' && key<='9' && (mod & KMOD_SHIFT) && !isMap)
 		{
@@ -3905,7 +3901,7 @@ retry_pos:
 
 			if (numUndo)
 			{
-				do 
+				do
 					undo[numUndo-1].Restore(this);
 				while (--numUndo);
 			}
@@ -3941,20 +3937,20 @@ retry_pos:
 			LoadSave(currentFile, false);
 
 #ifdef EDIT
-		else if (key=='z' && (mod & KMOD_ALT)) 
+		else if (key=='z' && (mod & KMOD_ALT))
 		{
 			if (numUndo>0 && !isMap)
 			{
 				time = undo[numUndo-1].endTime;
 				undoTime = undo[0].time;
-				
-				do 
+
+				do
 					undo[numUndo-1].Restore(this);
 				while (--numUndo);
 			}
 		}
 #endif
-		else if (key=='z' || key==SDLK_BACKSPACE || key==SDLK_DELETE || key=='u') 
+		else if (key=='z' || key==SDLK_BACKSPACE || key==SDLK_DELETE || key=='u')
 		{
 			if (!isMap)
 				Undo();
@@ -4030,7 +4026,7 @@ retry_pos:
 #ifdef EDIT
 		else if (!editMode)
 			return false;
-		
+
 		else if (key>='0' && key<='9' && (mod & KMOD_ALT) && !isMap)
 			levelPar = levelPar*10 + key-'0';
 		else if (key==SDLK_BACKSPACE  && (mod & KMOD_ALT) && !isMap)
@@ -4054,7 +4050,7 @@ retry_pos:
 			LoadSave(fn, true);
 			SDL_WM_SetCaption(currentFile, NULL);
 		}
-		
+
 		else if (key=='o' && (mod & KMOD_CTRL)){
 			char* fn = LoadSaveDialog(false, true, _("Open level"));
 			LoadSave(fn, false);
@@ -4062,7 +4058,7 @@ retry_pos:
 		}
 #endif
 
-		else 
+		else
 			return false;
 
 		return true;
@@ -4091,7 +4087,7 @@ retry_pos:
 		#define X(NAME,FILE,ALPHA) if (NAME) SDL_FreeSurface(NAME), NAME=0;
 		#include "gfx_list.h"
 	}
-	virtual void ScreenModeChanged() 
+	virtual void ScreenModeChanged()
 	{
 //		FreeGraphics();
 //		LoadGraphics();

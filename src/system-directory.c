@@ -218,7 +218,7 @@ error:
 
 /**
  * \brief Gets the number of files in the directory.
- * 
+ *
  * \param self Directory.
  * \return Number of files.
  */

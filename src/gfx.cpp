@@ -59,7 +59,7 @@ int SDL_focus = SDL_APPACTIVE | SDL_APPINPUTFOCUS;	// Initial focus state
 		static char path[1025] = "C:\\WINDOWS\\Desktop\\New Folder\\Foo\\Levels";
 		char backupPath[1025];
 		_getcwd(backupPath, sizeof(backupPath)/sizeof(backupPath[0])-1);
-		
+
 		memset(&f, 0, sizeof(f));
 
 		#define FILTER(desc, f) desc " (" f ")\0" f "\0"
@@ -131,7 +131,7 @@ void InitScreen()
 		SDL_FreeSurface(screen);
 
 	SDL_Surface* tempscreen = SDL_CreateRGBSurface(
-		SDL_SWSURFACE, 
+		SDL_SWSURFACE,
 		SCREEN_W, SCREEN_H,
 		16, 0xf800, 0x07e0, 0x001f, 0);
 
@@ -210,7 +210,7 @@ String GetBasePath()
 		strstr(base_path, "\\Release\\")[1] = '\0';
 #endif
 
-	return base_path;	
+	return base_path;
 #endif
 }
 
@@ -246,7 +246,7 @@ int main(int /*argc*/, char * /*argv*/[])
 	bbTabletDevice &td = bbTabletDevice::getInstance( );
 	SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
 #endif
-	
+
 	StateMakerBase::GetNew();
 
 	while(!quitting)
@@ -268,7 +268,7 @@ int main(int /*argc*/, char * /*argv*/[])
 					SDL_Delay(10-x);
 					x += TickTimer();
 				}
-			
+
 				StateMakerBase::current->Update(x / 1000.0);
 			}
 			else
@@ -318,9 +318,9 @@ int main(int /*argc*/, char * /*argv*/[])
 					stylusy = (1.0 - evt.y) * r.bottom;
 				}
 				styluspressure = (evt.buttons & 1) ? evt.pressure : 0;
- 
+
 				/*
-				printf("id=%d csrtype=%d b=%x (%0.3f, %0.3f, %0.3f) p=%0.3f tp=%0.3f\n", 
+				printf("id=%d csrtype=%d b=%x (%0.3f, %0.3f, %0.3f) p=%0.3f tp=%0.3f\n",
 					   evt.id,
 					   evt.type,
 					   evt.buttons,
@@ -361,7 +361,7 @@ int main(int /*argc*/, char * /*argv*/[])
 				if (m->msg == WM_DROPFILES)
 				{
 					HDROP h = (HDROP)m->wParam;
-					
+
 					char name[512];
 					if (DragQueryFile(h, 0xffffffff, 0, 0) == 1)
 					{
@@ -400,14 +400,14 @@ int main(int /*argc*/, char * /*argv*/[])
 			case SDL_MOUSEBUTTONUP:
 				noMouse = false;
 				mouse_buttons &= ~(1<<(e.button.button-1));
-				StateMakerBase::current->Mouse(e.button.x, e.button.y, e.button.x-mousex, e.button.y-mousey, 
+				StateMakerBase::current->Mouse(e.button.x, e.button.y, e.button.x-mousex, e.button.y-mousey,
 										0, 1<<(e.button.button-1), mouse_buttons);
 				mousex = e.button.x; mousey = e.button.y ;
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				noMouse = false;
 				mouse_buttons |= 1<<(e.button.button-1);
-				StateMakerBase::current->Mouse(e.button.x, e.button.y, e.button.x-mousex, e.button.y-mousey, 
+				StateMakerBase::current->Mouse(e.button.x, e.button.y, e.button.x-mousex, e.button.y-mousey,
 										1<<(e.button.button-1), 0, mouse_buttons);
 				mousex = e.button.x; mousey = e.button.y ;
 				break;
@@ -424,7 +424,7 @@ int main(int /*argc*/, char * /*argv*/[])
 				{
 					quitting = 1;
 				}
-				else if (k.keysym.sym==SDLK_F12)	
+				else if (k.keysym.sym==SDLK_F12)
 				{
 					// Toggle system pointer controlled by tablet or not
 					#ifdef USE_BBTABLET

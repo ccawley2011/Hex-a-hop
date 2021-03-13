@@ -127,17 +127,17 @@ public:
 class ClassName : public State
 {
 public:
-	virtual bool KeyPressed(int key, int mod) 
-	{ 
-		return false; 
+	virtual bool KeyPressed(int key, int mod)
+	{
+		return false;
 	}
-	virtual void KeyReleased(int key) 
-	{ 
-	}
-	virtual void Mouse(int x, int y, int dx, int dy, int buttons_pressed, int buttons_released, int buttons) 
+	virtual void KeyReleased(int key)
 	{
 	}
-	virtual void FileDrop(const char* filename) 
+	virtual void Mouse(int x, int y, int dx, int dy, int buttons_pressed, int buttons_released, int buttons)
+	{
+	}
+	virtual void FileDrop(const char* filename)
 	{
 	}
 	virtual void Update(double timedelta)
@@ -148,7 +148,7 @@ public:
 	{
 		// TODO
 	}
-	virtual void ScreenModeChanged() 
+	virtual void ScreenModeChanged()
 	{
 		// TODO
 	}
@@ -222,8 +222,8 @@ class StateMaker : public StateMakerBase
 public:
 	StateMaker(int key, bool start=false) : StateMakerBase(key, start)
 	{}
-	State* Create() 
-	{ 
+	State* Create()
+	{
 		if (!state) state = new X;
 		return state;
 	}

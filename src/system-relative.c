@@ -201,7 +201,7 @@ lisys_relative_exedir ()
 	char path[1024];
 
   CFBundleRef mainBundle = CFBundleGetMainBundle();
-	CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL( mainBundle ); 
+	CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL( mainBundle );
   if( !CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, sizeof(path)) )
 		return NULL;
 	CFRelease(resourcesURL);

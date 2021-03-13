@@ -54,7 +54,7 @@ public:
 		bestSolution = 0;
 		bestScore = 0;
 		bestSolutionLength = 0;
-		memset(lastScores, 0, sizeof(lastScores));	
+		memset(lastScores, 0, sizeof(lastScores));
 	}
 	void LoadSave(FILE* f, bool save)
 	{
@@ -71,7 +71,7 @@ public:
 		fn(&bestSolutionLength, sizeof(bestSolutionLength), 1, f);
 		fn(&bestScore, sizeof(bestScore), 1, f);
 		fn(&lastScores, sizeof(lastScores), 1, f);
-		fn(&unlocked, sizeof(unlocked), 1, f);		
+		fn(&unlocked, sizeof(unlocked), 1, f);
 
 		bestSolutionLength = SWAP32(bestSolutionLength);
 		bestScore = SWAP32(bestScore);
@@ -135,7 +135,7 @@ public:
 	{
 		bestScore = s;
 	}
-	void SetSolution(int l) { 
+	void SetSolution(int l) {
 		delete [] bestSolution;
 		bestSolutionLength = l;
 		bestSolution = new char [ l ];
@@ -203,9 +203,8 @@ class SaveState
 	}
 
 public:
-	
-	General general;
 
+	General general;
 
 	SaveState() : first(0)
 	{

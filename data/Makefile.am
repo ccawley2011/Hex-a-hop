@@ -69,7 +69,7 @@ nonfreeinfo = \
 	sound-lift-down-nonfree.ogg.xml \
 	sound-lift-up-nonfree.ogg.xml \
 	sound-spinner-nonfree.ogg.xml
-	
+
 datadir = $(DATADIR)
 data_DATA = $(freedata)
 EXTRA_DIST = $(freedata) $(freeinfo) \

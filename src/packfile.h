@@ -122,7 +122,7 @@ struct PackFile1
 			*data_length = SWAP32(*data_length);
 			i = i->GetNext();
 		}
-		
+
 		e = new Entry* [numfiles]; // CHECKME: where to delete?
 
 		i = (Entry*)data;

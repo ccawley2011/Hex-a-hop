@@ -33,10 +33,10 @@ struct Menu {
 	bool renderBG;
 
 	Menu() : renderBG(true), under(activeMenu), time(0) { activeMenu = this; }
-	
-	virtual ~Menu() { 
-		if(this!=deadMenu) FATAL("this!=deadMenu"); 
-		deadMenu=under; 
+
+	virtual ~Menu() {
+		if(this!=deadMenu) FATAL("this!=deadMenu");
+		deadMenu=under;
 	}
 
 	static void Pop()
@@ -65,12 +65,12 @@ struct Menu {
 			return false;
 		return true;
 	}
-	virtual void Mouse(int /*x*/, int /*y*/, int /*dx*/, int /*dy*/, int buttons_pressed, int /*buttons_released*/, int /*buttons*/) 
+	virtual void Mouse(int /*x*/, int /*y*/, int /*dx*/, int /*dy*/, int buttons_pressed, int /*buttons_released*/, int /*buttons*/)
 	{
 		if (buttons_pressed==4 || buttons_pressed==2)
 			Pop();
 	}
-	
+
 	virtual void Move(int /*dir*/) {}
 	virtual void Select() {}
 	virtual void Cancel() {}
@@ -83,13 +83,13 @@ struct Menu {
 };
 
 const char * hint[] = {
-	
+
 /*EMPTY*/
 _("Basic controls:|Move around with the keys Q,W,E,A,S,D or the numeric  keypad. Alternatively, you can use the mouse and  click on the tile you'd like to move to.    Use 'U', backspace or the right mouse button to  undo mistakes.    The 'Esc' key (or middle mouse button) brings up a  menu from which you can restart if you get stuck."),
 /*NORMAL*/
 0,
 /*COLLAPSABLE*/
-_("Objective:|Your goal is to break all the green tiles.    You mainly do this by jumping on them.    They will crack when you land on them, and  only disintegrate when you jump off.    Try not to trap yourself!"), 
+_("Objective:|Your goal is to break all the green tiles.    You mainly do this by jumping on them.    They will crack when you land on them, and  only disintegrate when you jump off.    Try not to trap yourself!"),
 /*COLLAPSE_DOOR*/
 _("The coloured walls flatten themselves when there  are no matching coloured tiles remaining."),
 /*TRAMPOLINE*/
@@ -209,7 +209,7 @@ struct HintMessage : public Menu
 		while (text.find("  ") != std::string::npos)
 			text.replace(text.find("  "), 2, "\n");
 
-		InnerTextWindowRect.w = SCREEN_W-TILE_W1*2; 
+		InnerTextWindowRect.w = SCREEN_W-TILE_W1*2;
 		InnerTextWindowRect.h = TextHeight(text, InnerTextWindowRect.w - 2*FONT_SPACING);
 		InnerTextWindowRect.h += FONT_SPACING;
 		OuterTextWindowRect = InnerTextWindowRect;
@@ -224,7 +224,7 @@ struct HintMessage : public Menu
 			y = SCREEN_H/4 + int(SCREEN_H*(-time*5)*3/4);
 
 		Render(0, y);
-		
+
 		if (!state && time>0.2)
 			PrintR(SCREEN_W-FONT_SPACING, SCREEN_H-FONT_SPACING, _("Press any key"));
 	}
@@ -257,7 +257,7 @@ struct HintMessage : public Menu
 			Print_Aligned(true, x+SCREEN_W/2, y+FONT_SPACING/2, InnerTextWindowRect.w - 2*FONT_SPACING, msg, 1);
 	}
 
-	virtual void Mouse(int /*x*/, int /*y*/, int /*dx*/, int /*dy*/, int buttons_pressed, int /*buttons_released*/, int /*buttons*/) 
+	virtual void Mouse(int /*x*/, int /*y*/, int /*dx*/, int /*dy*/, int buttons_pressed, int /*buttons_released*/, int /*buttons*/)
 	{
 		if (buttons_pressed && state==0 && time>0.2)
 			state = 1, time=0;
@@ -298,7 +298,7 @@ struct HintReview : public HintMessage
 	void Select() { Pop(); }
 
 
-	virtual void Mouse(int x, int y, int dx, int dy, int buttons_pressed, int buttons_released, int buttons) 
+	virtual void Mouse(int x, int y, int dx, int dy, int buttons_pressed, int buttons_released, int buttons)
 	{
 		if (buttons_pressed==1)
 		{
@@ -315,7 +315,7 @@ struct HintReview : public HintMessage
 		else if (buttons_pressed==16)
 			Move(1);
 		else
-			Menu::Mouse(x,y,dx,dy,buttons_pressed, buttons_released, buttons);	
+			Menu::Mouse(x,y,dx,dy,buttons_pressed, buttons_released, buttons);
 	}
 
 	bool KeyPressed(int key, int mod)
@@ -467,9 +467,9 @@ struct OptMenu : public Menu
 		r.w=SCREEN_W/2;
 		r.x=(SCREEN_W-r.w)/2;
 		r.y=SCREEN_H/3;
-		
+
 		r2 = r;
-		
+
 		const int SPACE = int(FONT_SPACING * 1.5);
 
 		r2.h = SPACE*num_opt + FONT_SPACING/2;
@@ -512,14 +512,14 @@ struct OptMenu : public Menu
 			}
 		}
 	}
-	
+
 	void Move(int dir)
 	{
 		select += dir;
 		if (select<0) select = num_opt-1;
 		if (select>=num_opt) select = 0;
 	}
-	virtual void Mouse(int x, int y, int dx, int dy, int buttons_pressed, int buttons_released, int buttons) 
+	virtual void Mouse(int x, int y, int dx, int dy, int buttons_pressed, int buttons_released, int buttons)
 	{
 		if (1)
 		{
@@ -574,7 +574,7 @@ struct WinLoseScreen : public OptMenu
 {
 	bool win;
 	int score, par, best_score;
-	WinLoseScreen(bool _win, int _score=0, int _par=0, int _prev_score=0) : 
+	WinLoseScreen(bool _win, int _score=0, int _par=0, int _prev_score=0) :
 		OptMenu(_win ? _("Level Complete!") : _("Emi can't swim...")),
 		win(_win),
 		score(_score),
@@ -603,9 +603,9 @@ struct WinLoseScreen : public OptMenu
 
 		if (win)
 			r2.y += FONT_SPACING * 3 + FONT_SPACING/2;
-		
+
 		OptMenu::RenderOptions();
-		
+
 		if (win)
 			r2.y -= FONT_SPACING * 3 + FONT_SPACING/2;
 
@@ -618,7 +618,7 @@ struct WinLoseScreen : public OptMenu
 			else if (score < best_score)
 				PrintC(true, x, y, _("New Best Score: %d  Par Score: %d"), score, par);
 			else if (par && best_score)
-				PrintC(true, x, y, _("Score: %d  Previous Best: %d  Par Score: %d"), score, best_score, par);	
+				PrintC(true, x, y, _("Score: %d  Previous Best: %d  Par Score: %d"), score, best_score, par);
 			else
 				PrintC(true, x, y+FONT_SPACING/2, _("Well Done!  Level Completed!"));
 		}
@@ -641,14 +641,14 @@ struct WinLoseScreen : public OptMenu
 		}
 		return OptMenu::KeyPressed(key, mod);
 	}
-	virtual void Mouse(int x, int y, int dx, int dy, int buttons_pressed, int buttons_released, int buttons) 
+	virtual void Mouse(int x, int y, int dx, int dy, int buttons_pressed, int buttons_released, int buttons)
 	{
 		if (buttons_pressed==4)
 		{
 			Undo();
 			return;
 		}
-		
+
 		OptMenu::Mouse(x, y, dx, dy, buttons_pressed, buttons_released, buttons);
 	}
 	void Cancel()
@@ -672,8 +672,6 @@ struct OptMenuTitle : public OptMenu
 	{
 		SDL_Rect a = {0,0,SCREEN_W,SCREEN_H};
 //		SDL_FillRect(screen, &a, SDL_MapRGB(screen->format, 10,25,25));
-
-		
 		SDL_BlitSurface(titlePage, &a, screen, &a);
 
 		OptMenu::RenderTitle();
@@ -701,19 +699,19 @@ struct OptMenuTitle : public OptMenu
 const char *ending[] = {
 	_(" Very Well Done! "),
 	"", "", "", "", "", "",
-	
-	"", "", "*15,4", "", "", 
-	
+
+	"", "", "*15,4", "", "",
+
 	_("All Levels Cleared!"),
-	
-	"", "", "*5,7", "", "", 
-	
+
+	"", "", "*5,7", "", "",
+
 	_("Not a single green hexagon is left unbroken."),
-	"", 
+	"",
 	_("Truly, you are a master of hexagon hopping!"),
-	
-	"", "", "*9,10", "", "", 
-	
+
+	"", "", "*9,10", "", "",
+
 	"", _("Credits"), "", "", "",
 	_("<Design & Direction:"), ">Tom Beaumont", "", "",
 	_("<Programming:"), ">Tom Beaumont", "", "",
@@ -727,26 +725,26 @@ const char *ending[] = {
 
 	_("<Thanks to:"), ">Kris Beaumont", "",  "",
 //	"", "<Some useless facts...", "",
-//	_("<Tools and libraries used:"), "", ">Photoshop LE", ">Inno Setup", ">Wings 3D", ">MSVC", ">SDL", "", 
-//	_("<Fonts used:"), "", ">Copperplate gothic bold", ">Verdana", "", 
+//	_("<Tools and libraries used:"), "", ">Photoshop LE", ">Inno Setup", ">Wings 3D", ">MSVC", ">SDL", "",
+//	_("<Fonts used:"), "", ">Copperplate gothic bold", ">Verdana", "",
 
-	"", "", "*12,14", "", "", 
+	"", "", "*12,14", "", "",
 
 	_("Thanks for playing!")
 };
 
 const char *ending2[] = {
 	_(" Absolutely Amazing! "),
-	"", "", "", "", "", 
-	
-	"", "", "*15,4", "", "", 
-	
+	"", "", "", "", "",
+
+	"", "", "*15,4", "", "",
+
 	_("All Levels Mastered!!"),
-	
-	"", "", "*5,7", "", "", 
-	
+
+	"", "", "*5,7", "", "",
+
 	_("You crushed every last green hexagon with"),
-	_("breathtaking efficiency!"), 
+	_("breathtaking efficiency!"),
 	"",
 	_("You truly are a grand master of hexagon hopping!"),
 };
@@ -765,7 +763,7 @@ struct Ending : public Menu
 		void Update(double td)
 		{
 			if (type==EMPTY) return;
-			
+
 			time -= td;
 			x += xs*td;
 			y += ys*td;
@@ -806,7 +804,7 @@ struct Ending : public Menu
 					type = EMPTY;
 				}
 			}
-			
+
 			if (type==EMPTY) return;
 
 			if (type<0.05 && type<15)
@@ -835,7 +833,7 @@ struct Ending : public Menu
 			xa=0; ya=-100;
 			double r = (rand() % 2000) * PI / 1000;
 			double d = rand() % 50 + 250;
-			
+
 			xs = sin(r)*d;
 			ys = cos(r)*d;
 			time = 1 + (rand() & 255) /255.0;
@@ -855,7 +853,7 @@ struct Ending : public Menu
 	double t;
 	bool goodEnding;
 	static Ending* ending;
-	
+
 	Ending(bool _goodEnd) : goodEnding(_goodEnd)
 	{
 		memset(p, 0, sizeof(p));
@@ -865,7 +863,7 @@ struct Ending : public Menu
 		t=0;
 		PlayMusic(HHOP_MUSIC_ENDING);
 	}
-	
+
 	void Render()
 	{
 		SDL_Rect a = {0,0,SCREEN_W,SCREEN_H};
@@ -900,9 +898,9 @@ struct Ending : public Menu
 		if (scroll > scrollMax + FONT_SPACING*10)
 			PrintC(true, x, SCREEN_H/2-FONT_SPACING/2, _("The End"));
 	}
-	
+
 	void Cancel();
-	
+
 	bool KeyPressed(int key, int mod)
 	{
 		if (key=='r' && (mod & KMOD_CTRL))
@@ -922,9 +920,9 @@ struct Ending : public Menu
 		double old = time;
 
 		t = td;
-		if (keyState[SDLK_LSHIFT]) 
+		if (keyState[SDLK_LSHIFT])
 			t = td*5;
-		if (keyState[SDLK_0]) 
+		if (keyState[SDLK_0])
 			t = MAX(-td*5, -time);
 
 		UpdateSound(-1.0);
@@ -992,7 +990,7 @@ struct TitleMenu : public OptMenuTitle
 					sprintf(optionSlotName[i], _("Continue game %d (%d%% + %d%%)"), i+1, p.general.completionPercentage, p.general.masteredPercentage);
 				else
 					sprintf(optionSlotName[i], _("Continue game %d (%d%% complete)"), i+1, p.general.completionPercentage);
-	
+
 				opt[num_opt++] = OPT_GAMESLOT_0 + i;
 			}
 			else
@@ -1004,8 +1002,8 @@ struct TitleMenu : public OptMenuTitle
 					freeSlot = i;
 			}
 		}
-		
-		
+
+
 		if (num_opt < MAX_GAMESLOT)
 			opt[num_opt++] = OPT_GAMESLOT_NEW;
 
@@ -1099,9 +1097,9 @@ struct OptionMenu : public OptMenuTitle
 		opt[num_opt++] = OPT_MUSIC;
 		opt[num_opt++] = OPT_EFFECTS;
 #endif
-		
+
 		opt[num_opt++] = OPT_BACK;
-		
+
 		if (title)
 		{
 			OptMenuTitle::Init(), renderBG=false;

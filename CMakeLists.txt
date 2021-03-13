@@ -145,9 +145,9 @@ set(
 		data/tiles_reflect.dat
 		data/title.dat
 )
-		
+
 set(
-  hah_RSRCS		
+  hah_RSRCS
 		data/hex-a-hop.icns
 )
 
@@ -167,7 +167,7 @@ if(APPLE)
 	set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${hah_VERSION}")
 	set(MACOSX_BUNDLE_BUNDLE_VERSION "${hah_VERSION}")
   set(MACOSX_BUNDLE_ICON_FILE hex-a-hop.icns)
-  
+
   # paths for data files in bundle
   set_source_files_properties(
     ${hah_RSRCS}
@@ -178,7 +178,7 @@ if(APPLE)
     ${hah_data}
     PROPERTIES
       MACOSX_PACKAGE_LOCATION Resources/data
-  )  
+  )
 else(APPLE)
 	add_executable(
 		hex-a-hop
@@ -255,4 +255,3 @@ message( "  SDLMIXER_LIBRARY = ${SDLMIXER_LIBRARY}" )
 message( "  SDLTTF_INCLUDE_DIR = ${SDLTTF_INCLUDE_DIR}" )
 message( "  SDLTTF_LIBRARY = ${SDLTTF_LIBRARY}" )
 message( "" )
-	

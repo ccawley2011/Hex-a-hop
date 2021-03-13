@@ -311,7 +311,7 @@ void Print_Aligned(bool split, int x, int y, int width, const char * string, int
 	int w;
 	int off;
 	char tmp_utf8[5000]; // FIXME: Check this limit
-	
+
 	ConvertToUTF8(string, tmp_utf8, sizeof(tmp_utf8)/sizeof(char));
 	std::vector<std::string> lines = TextWrapString(tmp_utf8, width, split);
 	std::vector<std::string>::iterator iter;
