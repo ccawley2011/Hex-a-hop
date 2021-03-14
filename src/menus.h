@@ -232,14 +232,14 @@ struct HintMessage : public Menu
 	void Render(int x, int y)
 	{
 		//if (y<0) {
-		//  std::cout << "Error in Render: " << x << " " << y << "\n"; // CHECKME
+		//  std::cout << "Error in Render: " << x << " " << y << "\n"; // XXX
 		//  y = 0;
 		//}
 		InnerTextWindowRect.x = x+TILE_W1;
 		InnerTextWindowRect.y = y;
 		OuterTextWindowRect.x = InnerTextWindowRect.x-2;
 		OuterTextWindowRect.y = InnerTextWindowRect.y-2-FONT_SPACING;
-		// Height is reduced in SDL_FillRect!!? Why? ==> Use a copy:
+		// XXX: Height is reduced in SDL_FillRect!!? Why? ==> Use a copy:
 		SDL_Rect r2 = InnerTextWindowRect;
 		SDL_Rect r = OuterTextWindowRect;
 		SDL_FillRect(screen, &r, SDL_MapRGB(screen->format, 60,90,90));

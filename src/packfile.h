@@ -126,7 +126,7 @@ struct PackFile1
 			i = i->GetNext();
 		}
 
-		e = new Entry* [numfiles]; // CHECKME: where to delete?
+		e = new Entry* [numfiles]; // XXX: where to delete?
 
 		i = (Entry*)data;
 		for (int j=0; j<numfiles; j++, i = i->GetNext())

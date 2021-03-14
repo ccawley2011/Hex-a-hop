@@ -375,7 +375,7 @@ void SaveState::ApplyStuff()
 }
 
 
-// somewhere else Tile map[][] is assigned to an unsigned char not int32_t
+// XXX: Somewhere else Tile map[][] is assigned to an unsigned char not int32_t
 // but the data file format expects it to be 32 bit wide!??
 typedef int32_t Tile;
 typedef int Dir;

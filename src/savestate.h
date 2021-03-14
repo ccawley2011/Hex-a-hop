@@ -33,7 +33,7 @@ class LevelSave
 {
 	friend struct HexPuzzle;
 
-	// CHECKME: If char is larger than 8 bits (== 1 byte???)
+	// XXX: If char is larger than 8 bits (== 1 byte???)
 	// the code is no longer big endian safe? SWAP16/32 is necessary?
 	// Or is a byte always of the same size as char, e.g. 16 bits, so
 	// that int16_t is equally saved on big and little endian systems?
