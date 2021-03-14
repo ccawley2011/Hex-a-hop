@@ -29,7 +29,7 @@
 
 struct PackFile1
 {
-	/* Is it *NOT* save to interpret a byte stream as list of Entries!
+	/* Is it *NOT* safe to interpret a byte stream as list of Entries!
 	 * The alignment could increase the Entry size on some systems without
 	 * attribute.
 	 *

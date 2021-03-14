@@ -1730,7 +1730,7 @@ struct HexPuzzle : public State
 		int size;
 		// FIXME: According to http://userpage.fu-berlin.de/~ram/pub/pub_jf47ht20Ht/c_faq_de
 		// undefined for binary streams! (POSIX does not differ between
-		// ascii and binary, so we are on the save side in Linux).
+		// ascii and binary, so we are on the safe side in Linux).
 		fseek(f, 0, SEEK_END);
 		size = ftell(f);
 		fseek(f, 0, SEEK_SET);
