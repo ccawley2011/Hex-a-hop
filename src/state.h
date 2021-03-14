@@ -33,10 +33,13 @@
 #ifdef WIN32
 	// Trigger debugger
 //	#define FATAL(string, string2) do{__asm{int 3};}while(0)
-	static inline void FATAL(const char * string="Unknown", const char * string2="") { fprintf(stderr, "Fatal error: %s \"%s\"\n", string, string2); exit(0); }
-#else
-	static inline void FATAL(const char * string="Unknown", const char * string2="") { fprintf(stderr, "Fatal error: %s \"%s\"\n", string, string2); exit(0); }
 #endif
+
+static inline void FATAL(const char * string="Unknown", const char * string2="")
+{
+	fprintf(stderr, "Fatal error: %s \"%s\"\n", string, string2);
+	exit(0);
+}
 
 class String
 {
