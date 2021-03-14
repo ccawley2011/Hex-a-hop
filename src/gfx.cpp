@@ -191,7 +191,7 @@ String GetBasePath()
 		}
 	}
 
-	// Check the path ends with a directory seperator
+	// Check the path ends with a directory separator.
 	if (strlen(base_path)>0)
 	{
 		char last = base_path[strlen(base_path)-1];
@@ -273,7 +273,7 @@ int main(int /*argc*/, char * /*argv*/[])
 			}
 			else
 			{
-				// Not focussed. Try not to eat too much CPU!
+				// Not focused. Try not to eat too much CPU!
 				SDL_Delay(150);
 			}
 

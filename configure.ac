@@ -41,7 +41,7 @@ AC_ARG_ENABLE([sound], AS_HELP_STRING([--disable-sound],[Do not compile with sou
 AC_ARG_ENABLE([sdlttf], AS_HELP_STRING([--disable-sdlttf],[Use SDL_Pango instead of SDL_ttf]), [want_ttf=$enableval], [want_ttf=no])
 AC_ARG_ENABLE([relpath], AS_HELP_STRING([--enable-relpath],[Install everything under a single directory]), [want_relative=$enableval], [want_relative=no])
 
-# Allow specifiying a hard-coded font file at build time
+# Allow specifying a hard-coded font file at build time
 AC_ARG_WITH(font-path,
         AS_HELP_STRING([--with-font-path=file.ttf],
                 [Path to the TTF font to use at runtime with SDL_ttf (DejaVu Sans Bold recommended)]),

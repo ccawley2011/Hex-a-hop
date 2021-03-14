@@ -23,7 +23,7 @@ struct LevelInfo{
 } levelNames[] = {
 
 /* TRANSLATORS: The following strings (in level_list.h) are level names, which
-   should give (in a humerous way) the player an indication about this level. */
+   should give (in a humorous way) the player an indication about this level. */
 {0,		"map_maybe\\map.lev",				_("  Map"),},
 {0,		"0_green\\asymmetrix.lev",			_("  Orbital"),},
 {0,		"0_green\\hive.lev",				_("  Hive"),},
