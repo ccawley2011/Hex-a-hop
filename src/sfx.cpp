@@ -250,10 +250,7 @@ void InitSound(const char* path)
 #ifndef DISABLE_SOUND
 	SDL_InitSubSystem(SDL_INIT_AUDIO);
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
-	{
-		fprintf(stderr, "Initializing audio failed: %s\n", Mix_GetError());
-		exit(1);
-	}
+		FATAL("Initializing audio failed", Mix_GetError());
 	Mix_AllocateChannels(HHOP_EFFECT_CHANNELS);
 	Mix_VolumeMusic((int)(MIX_MAX_VOLUME*MUSIC_VOLUME));
 
