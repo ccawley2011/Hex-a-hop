@@ -38,7 +38,7 @@
 static inline void FATAL(const char * string="Unknown", const char * string2="")
 {
 	fprintf(stderr, "Fatal error: %s \"%s\"\n", string, string2);
-	exit(0);
+	exit(1);
 }
 
 class String
