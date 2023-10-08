@@ -89,7 +89,7 @@ String GetFilePath(const char* file, const char* flags)
 	extern String base_path;
 	String filename;
 
-#ifdef WIN32
+#if defined(WIN32) || defined(__NDS__)
 	filename = base_path + file;
 #else
 	if (strncmp(file, "save", 4) == 0)
@@ -286,18 +286,39 @@ int isFadeRendering=0;
 */
 
 #if 1
-	#define TILE_W1 18
-	#define TILE_W3	64
+	#ifdef __NDS__
+		#define GIRL_W 25
+		#define GIRL_H 32
+		#define GIRL_X 13
+		#define GIRL_Y 26
+		#define GIRL_REFLECT 8
+
+		#define TILE_W1 7
+		#define TILE_W3	26
+		#define TILE_HUP 9	//extra visible height of wall (used for determining whether a wall was clicked on)
+		#define TILE_H_LIFT_UP   11
+		#define TILE_H_REFLECT_OFFSET 9
+		#define FONT_SPACING 10
+	#else
+		#define GIRL_W 64
+		#define GIRL_H 80
+		#define GIRL_X 32
+		#define GIRL_Y 65
+		#define GIRL_REFLECT 20
+
+		#define TILE_W1 18
+		#define TILE_W3	64
+		#define TILE_HUP 22	//extra visible height of wall (used for determining whether a wall was clicked on)
+		#define TILE_H_LIFT_UP   26
+		#define TILE_H_REFLECT_OFFSET 24
+		#define FONT_SPACING 25
+	#endif
 	#define GFX_SIZE TILE_W3
 	#define TILE_W2 (TILE_W3-TILE_W1)
 	#define TILE_H1 TILE_W1
-	#define TILE_HUP 22	//extra visible height of wall (used for determining whether a wall was clicked on)
 	#define TILE_H2 (TILE_H1*2)
 	#define TILE_WL (TILE_W2-TILE_W1)
-	#define TILE_H_LIFT_UP   26
-	#define TILE_H_REFLECT_OFFSET 24
 	#define TILE_HUP2 TILE_H_LIFT_UP	// Displacement of object on top of wall
-	#define FONT_SPACING 25
 	#define FONT_X_SPACING (-1)	// -1 in order to try and overlap the black borders of adjacent characters
 #else
 	#define TILE_WL 30
@@ -724,14 +745,14 @@ void RenderTile(bool reflect, int t, int x, int y, int cliplift)
 }
 void RenderGirl(bool reflect, int r, int frame, int x, int y, int h)
 {
-	int sx = r * 64;
-	int sy = frame * 80*2;
+	int sx = r * GIRL_W;
+	int sy = frame * GIRL_H*2;
 	if (reflect)
-		y += TILE_H_REFLECT_OFFSET+20+h, sy += 80;
+		y += TILE_H_REFLECT_OFFSET+GIRL_REFLECT +h, sy += GIRL_H;
 	else
 		y -= h;
-	SDL_Rect src = {sx, sy, 64, 80};
-	SDL_Rect dst = {x-scrollX-32, y-scrollY-65, 0, 0};
+	SDL_Rect src = {sx, sy, GIRL_W, GIRL_H};
+	SDL_Rect dst = {x-scrollX-GIRL_X, y-scrollY-GIRL_Y, GIRL_W, GIRL_H};
 	SDL_BlitSurface(girlGraphics, &src, screen, &dst);
 }
 
@@ -2392,6 +2413,8 @@ struct HexPuzzle : public State
 		SDL_Surface * out = SDL_DisplayFormat(g);
 		SDL_FreeSurface(g);
 		if (!out) FATAL("Unable to create SDL surface (SDL_DisplayFormat)");
+
+		SDL_SetAlpha(out, 0, 255);
 		return out;
 	}
 
@@ -4087,7 +4110,11 @@ retry_pos:
 	//	};
 	//	static SDL_Cursor * c = SDL_CreateCursor(data, mask, 32, 32, 1, 1);
 	//	SDL_SetCursor(c);
+#ifdef __NDS__
+		SDL_ShowCursor(0);
+#else
 		SDL_ShowCursor(1);
+#endif
 	}
 	void FreeGraphics()
 	{

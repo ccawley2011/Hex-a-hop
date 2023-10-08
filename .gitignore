@@ -1,4 +1,6 @@
 *.o
+*.elf
+*.nds
 .deps
 *.m4
 Makefile
@@ -9,6 +11,11 @@ autom4te.cache
 config.h*
 src/hex-a-hop
 ABOUT-NLS
+CMakeCache.txt
+CMakeFiles/
+CPackConfig.cmake
+CPackSourceConfig.cmake
+cmake_install.cmake
 config.guess
 config.log
 config.rpath

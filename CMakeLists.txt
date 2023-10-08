@@ -37,16 +37,6 @@ endif(APPLE)
 include(CheckIncludeFiles)
 
 # check if header file exists
-check_include_files(libintl.h HAVE_LIBINTL_H)
-check_include_files(inttypes.h HAVE_INTTYPES_H)
-check_include_files(memory.h HAVE_MEMORY_H)
-check_include_files(stdint.h HAVE_STDINT_H)
-check_include_files(stdlib.h HAVE_STDLIB_H)
-check_include_files(strings.h HAVE_STRINGS_H)
-check_include_files(string.h HAVE_STRING_H)
-check_include_files(sys/stat.h HAVE_SYS_STAT_H)
-check_include_files(sys/types.h HAVE_SYS_TYPES_H)
-check_include_files(unistd.h HAVE_UNISTD_H)
 check_include_files(windows.h HAVE_WINDOWS_H)
 
 # On windows systems the math library is not separated so do not specify
@@ -76,8 +66,15 @@ add_definitions(-DHAVE_CONFIG_H)
 find_package(SDL REQUIRED)
 include_directories(${SDL_INCLUDE_DIR})
 
-find_package(SDL_mixer REQUIRED)
-include_directories(${SDLMIXER_INCLUDE_DIR})
+find_package(SDL_image REQUIRED)
+include_directories(${SDLIMAGE_INCLUDE_DIR})
+
+if(NOT NINTENDO_DS)
+	find_package(SDL_mixer REQUIRED)
+	include_directories(${SDLMIXER_INCLUDE_DIR})
+else(NOT NINTENDO_DS)
+	add_definitions(-DDISABLE_SOUND)
+endif(NOT NINTENDO_DS)
 
 find_package(SDL_ttf REQUIRED)
 include_directories(${SDLTTF_INCLUDE_DIR})
@@ -188,12 +185,22 @@ endif(APPLE)
 
 target_link_libraries(
 	hex-a-hop
-		${SDL_LIBRARY}
+		${SDLIMAGE_LIBRARY}
 		${SDLMIXER_LIBRARY}
 		${SDLTTF_LIBRARY}
+		${SDL_LIBRARY}
 		SDLmain
 )
 
+if(NINTENDO_DS)
+	target_link_libraries(hex-a-hop freetype bz2 png z filesystem fat mm9)
+	nds_create_rom(hex-a-hop
+		NAME "${hah_PACKAGENAME}"
+		SUBTITLE1 "${hah_DESCRIPTION}"
+		SUBTITLE2 "${hah_HOMEPAGE}"
+		ICON ${CMAKE_CURRENT_SOURCE_DIR}/data-nds/hex-a-hop-16.bmp
+		NITROFS ${CMAKE_CURRENT_SOURCE_DIR}/data-nds)
+endif(NINTENDO_DS)
 
 #####################################################################
 # Installation
@@ -250,6 +257,8 @@ message( "  CMAKE_OSX_ARCHITECTURES = ${CMAKE_OSX_ARCHITECTURES}" )
 message( "  CMAKE_GENERATOR = ${CMAKE_GENERATOR}" )
 message( "  SDL_INCLUDE_DIR = ${SDL_INCLUDE_DIR}" )
 message( "  SDL_LIBRARY = ${SDL_LIBRARY}" )
+message( "  SDLIMAGE_INCLUDE_DIR = ${SDLIMAGE_INCLUDE_DIR}" )
+message( "  SDLIMAGE_LIBRARY = ${SDLIMAGE_LIBRARY}" )
 message( "  SDLMIXER_INCLUDE_DIR = ${SDLMIXER_INCLUDE_DIR}" )
 message( "  SDLMIXER_LIBRARY = ${SDLMIXER_LIBRARY}" )
 message( "  SDLTTF_INCLUDE_DIR = ${SDLTTF_INCLUDE_DIR}" )

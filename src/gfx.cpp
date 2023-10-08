@@ -25,6 +25,9 @@
 #include <cassert>
 #include <SDL.h>
 #include <SDL_image.h>
+#ifdef __NDS__
+#include <filesystem.h>
+#endif
 
 #ifdef WIN32
 /*	#include <SDL_syswm.h>
@@ -122,6 +125,13 @@ bool fullscreen = false;
 
 void InitScreen()
 {
+#ifdef __NDS__
+	realScreen = SDL_SetVideoMode(
+		SCREEN_W, SCREEN_H, 16, // Width, Height, BPP
+		SDL_SWSURFACE | SDL_FULLSCREEN | SDL_BOTTOMSCR );
+
+	screen = realScreen;
+#else
 	realScreen = SDL_SetVideoMode(
 		SCREEN_W, SCREEN_H, // Width, Height
 		0, // Current BPP
@@ -137,6 +147,7 @@ void InitScreen()
 
 	screen = SDL_DisplayFormat(tempscreen);
 	SDL_FreeSurface(tempscreen);
+#endif
 }
 
 void ToggleFullscreen()
@@ -174,6 +185,11 @@ String GetBasePath()
 	}
 	else
 		base_path = "./data/";
+	return base_path;
+#elif defined(__NDS__)
+	nitroFSInit(NULL);
+
+	base_path = "nitro:/";
 	return base_path;
 #else
 	base_path = DATADIR "/";

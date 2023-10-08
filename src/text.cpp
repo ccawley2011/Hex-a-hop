@@ -14,6 +14,13 @@
 
 static TTF_Font* font;
 
+#ifdef __NDS__
+#define FONT_PATH "DejaVuSans-Bold.ttf"
+#define FONT_SIZE 7
+#else
+#define FONT_SIZE 16
+#endif
+
 /**
  * \brief Splits a string into one or more lines.
  *
@@ -230,7 +237,7 @@ bool TextInit(const char* base)
 #endif
 
 	TTF_Init();
-	font = TTF_OpenFont(name.c_str(), 16);
+	font = TTF_OpenFont(name.c_str(), FONT_SIZE);
 	if (font == NULL)
 	{
 		fprintf (stderr, "Cannot load font `%s'.\n", name.c_str());
