@@ -38,6 +38,21 @@
 #define SDLK_KP_9 SDLK_KP9
 #endif
 
+#ifdef __NDS__
+#define JOYSTICK_PAUSE   0 /* Start */
+#define JOYSTICK_SELECT  1 /* A */
+#define JOYSTICK_BACK    2 /* B */
+#define JOYSTICK_DELETE  3 /* X */
+#define JOYSTICK_RESTART 7 /* Select */
+#else
+#define JOYSTICK_SELECT  0
+#define JOYSTICK_BACK    1
+#define JOYSTICK_DELETE  2
+#define JOYSTICK_PAUSE   3
+#define JOYSTICK_RESTART 4
+#endif
+
+
 #ifdef WIN32
 	// Trigger debugger
 //	#define FATAL(string, string2) do{__asm{int 3};}while(0)
@@ -117,6 +132,9 @@ public:
 
 	virtual bool KeyPressed(int key, int mod) = 0;
 	virtual void KeyReleased(int /*key*/) {};
+	virtual bool JoyPressed(int button) = 0;
+	virtual void JoyReleased(int /*button*/) {};
+	virtual bool JoyHatMotion(Uint8 /*value*/) = 0;
 	virtual void Mouse(int x, int y, int dx, int dy, int buttons_pressed, int buttons_released, int buttons) = 0;
 	virtual void Update(double timedelta) = 0;
 	virtual void Render() = 0;
@@ -136,6 +154,16 @@ public:
 		return false;
 	}
 	virtual void KeyReleased(int key)
+	{
+	}
+	virtual bool JoyPressed(int button)
+	{
+		return false;
+	}
+	virtual void JoyReleased(int button)
+	{
+	}
+	virtual bool JoyHatMotion(Uint8 value)
 	{
 	}
 	virtual void Mouse(int x, int y, int dx, int dy, int buttons_pressed, int buttons_released, int buttons)

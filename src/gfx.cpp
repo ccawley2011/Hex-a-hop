@@ -234,7 +234,7 @@ int main(int /*argc*/, char * /*argv*/[])
 {
 	base_path = GetBasePath();
 
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_NOPARACHUTE) < 0)
 		FATAL("Cannot initialize SDL", SDL_GetError());
 	if (!TextInit(base_path))
 		return 1;
@@ -262,6 +262,10 @@ int main(int /*argc*/, char * /*argv*/[])
 	bbTabletDevice &td = bbTabletDevice::getInstance( );
 	SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
 #endif
+
+	SDL_Joystick *joystick = SDL_JoystickOpen(0);
+	if (!joystick)
+		fprintf(stderr, "Could not open joystick: %s\n", SDL_GetError());
 
 	StateMakerBase::GetNew();
 
@@ -465,6 +469,18 @@ int main(int /*argc*/, char * /*argv*/[])
 			}
 			break;
 
+			case SDL_JOYBUTTONUP:
+				StateMakerBase::current->JoyReleased(e.jbutton.button);
+				break;
+
+			case SDL_JOYBUTTONDOWN:
+				StateMakerBase::current->JoyPressed(e.jbutton.button);
+				break;
+
+			case SDL_JOYHATMOTION:
+				StateMakerBase::current->JoyHatMotion(e.jhat.value);
+				break;
+
 			case SDL_QUIT:
 				quitting = 1;
 				break;
@@ -473,6 +489,7 @@ int main(int /*argc*/, char * /*argv*/[])
 
 	TextFree();
 	FreeSound();
+	SDL_JoystickClose(joystick);
 	SDL_Quit();
 	return 0;
 }

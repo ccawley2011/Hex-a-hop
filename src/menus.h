@@ -32,7 +32,7 @@ static void HackKeyPress(int key, int mod)
 struct Menu {
 	bool renderBG;
 
-	Menu() : renderBG(true), under(activeMenu), time(0) { activeMenu = this; }
+	Menu() : renderBG(true), under(activeMenu), time(0), lasthat(0) { activeMenu = this; }
 
 	virtual ~Menu() {
 		if(this!=deadMenu) FATAL("this!=deadMenu");
@@ -65,6 +65,33 @@ struct Menu {
 			return false;
 		return true;
 	}
+	virtual bool JoyPressed(int button)
+	{
+		if (button==JOYSTICK_SELECT)
+		{
+			Select();
+			noMouse=1;
+		}
+		else if (button==JOYSTICK_BACK)
+			Cancel();
+		else
+			return false;
+		return true;
+	}
+	virtual bool JoyHatMotion(Uint8 value)
+	{
+		if ((value & ~lasthat) & SDL_HAT_UP)
+			Move(-1), noMouse=1;
+		if ((value & ~lasthat) & SDL_HAT_DOWN)
+			Move(1), noMouse=1;
+		else {
+			lasthat = value;
+			return false;
+		}
+
+		lasthat = value;
+		return true;
+	}
 	virtual void Mouse(int /*x*/, int /*y*/, int /*dx*/, int /*dy*/, int buttons_pressed, int /*buttons_released*/, int /*buttons*/)
 	{
 		if (buttons_pressed==4 || buttons_pressed==2)
@@ -80,6 +107,7 @@ struct Menu {
 
 	Menu * under;
 	double time;
+	Uint8 lasthat;
 };
 
 const char * hint[] = {
@@ -270,6 +298,20 @@ struct HintMessage : public Menu
 		return true;
 	}
 
+	bool JoyPressed(int /*button*/)
+	{
+		if (state==0 && time>0.2)
+			state = 1, time=0;
+		return true;
+	}
+
+	bool JoyHatMotion(Uint8 value)
+	{
+		if (value!=0 && state==0 && time>0.2)
+			state = 1, time=0;
+		return true;
+	}
+
 	virtual void Update(double timedelta)
 	{
 		Menu::Update(timedelta);
@@ -326,6 +368,19 @@ struct HintReview : public HintMessage
 			Move(1);
 		else
 			return Menu::KeyPressed(key, mod);
+		return true;
+	}
+
+	bool JoyHatMotion(Uint8 value)
+	{
+		if ((value & ~lasthat) & SDL_HAT_LEFT)
+			Move(-1);
+		if ((value & ~lasthat) & SDL_HAT_RIGHT)
+			Move(1);
+		else
+			return Menu::JoyHatMotion(value);
+
+		lasthat = value;
 		return true;
 	}
 
@@ -641,6 +696,18 @@ struct WinLoseScreen : public OptMenu
 		}
 		return OptMenu::KeyPressed(key, mod);
 	}
+	bool JoyPressed(int button)
+	{
+		if (button==JOYSTICK_BACK)
+			return Undo(), true;
+		if (button==JOYSTICK_RESTART)
+		{
+			Pop();
+			HackKeyPress('r', KMOD_CTRL);
+			return true;
+		}
+		return OptMenu::JoyPressed(button);
+	}
 	virtual void Mouse(int x, int y, int dx, int dy, int buttons_pressed, int buttons_released, int buttons)
 	{
 		if (buttons_pressed==4)
@@ -913,6 +980,18 @@ struct Ending : public Menu
 		return true;
 	}
 
+	bool JoyPressed(int button)
+	{
+		if (button==JOYSTICK_RESTART)
+		{
+			time = 0;
+			memset(p, 0, sizeof(p));
+		}
+		else
+			return Menu::JoyPressed(button);
+		return true;
+	}
+
 	void Update(double td)
 	{
 		noMouse = 1;
@@ -1024,6 +1103,7 @@ struct TitleMenu : public OptMenuTitle
 #endif
 	}
 	bool KeyPressed(int key, int mod);
+	bool JoyPressed(int button);
 	void Cancel ();
 };
 
@@ -1082,6 +1162,15 @@ struct PauseMenu : public OptMenu
 			return true;
 		}
 		return Menu::KeyPressed(key, mod);
+	}
+	virtual bool JoyPressed(int button)
+	{
+		if (button==JOYSTICK_PAUSE)
+		{
+			Pop();
+			return true;
+		}
+		return Menu::JoyPressed(button);
 	}
 	void Cancel ();
 };
@@ -1185,6 +1274,21 @@ bool TitleMenu::KeyPressed(int key, int mod)
 		return true;
 	}
 	return OptMenu::KeyPressed(key, mod);
+}
+
+bool TitleMenu::JoyPressed(int button)
+{
+	if (button==JOYSTICK_DELETE)
+	{
+		if (select<0 || select>=num_opt || opt[select]<OPT_GAMESLOT_0 || opt[select]>OPT_GAMESLOT_LAST)
+			return true;
+		int i = opt[select] - OPT_GAMESLOT_0;
+
+		new DeleteConfirmMenu(i);
+
+		return true;
+	}
+	return OptMenu::JoyPressed(button);
 }
 
 void TitleMenu::Cancel ()

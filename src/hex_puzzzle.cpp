@@ -83,6 +83,9 @@ const char * mapname = "Levels\\map_maybe\\map.lev";
 void RenderTile(bool reflect, int t, int x, int y, int cliplift=-1);
 
 std::map<int, int> keyState;
+std::map<int, int> joyState;
+Uint8 hatState = SDL_HAT_CENTERED;
+Uint8 hatLast = SDL_HAT_CENTERED;
 
 String GetFilePath(const char* file, const char* flags)
 {
@@ -3743,6 +3746,12 @@ retry_pos:
 			if (it->second)
 				keyState[it->first] = 1;
 
+		for (auto it = joyState.begin(); it != joyState.end(); it++)
+			if (it->second)
+				joyState[it->first] = 1;
+
+		hatLast = hatState;
+
 		if (activeMenu)
 			return;
 
@@ -3800,7 +3809,7 @@ retry_pos:
 
 		if (!isMap && !editMode && undoTime < 0)
 		{
-			if (keyState[SDLK_z] || keyState[SDLK_BACKSPACE] || keyState[SDLK_u])
+			if (keyState[SDLK_z] || keyState[SDLK_BACKSPACE] || keyState[SDLK_u] || joyState[JOYSTICK_BACK])
 			{
 				Undo();
 				return;
@@ -3808,16 +3817,17 @@ retry_pos:
 		}
 		if (isMap && !editMode)
 		{
+			Uint8 hatPressed = hatState & ~hatLast;
 
-			if ((keyState[SDLK_q] | keyState[SDLK_KP_7]) & 2) keyboardp.x--;
-			else if ((keyState[SDLK_d] | keyState[SDLK_KP_3]) & 2) keyboardp.x++;
-			else if ((keyState[SDLK_e] | keyState[SDLK_KP_9]) & 2) keyboardp.x++, keyboardp.y--;
-			else if ((keyState[SDLK_a] | keyState[SDLK_KP_1]) & 2) keyboardp.x--, keyboardp.y++;
-			else if ((keyState[SDLK_w] | keyState[SDLK_KP_8] | keyState[SDLK_UP]) & 2) keyboardp.y--;
-			else if ((keyState[SDLK_s] | keyState[SDLK_KP_2] | keyState[SDLK_DOWN]) & 2) keyboardp.y++;
-			else if ((keyState[SDLK_LEFT]) & 2) keyboardp.x--, keyboardp.y+=keyboardp.x&1;
-			else if (((keyState[SDLK_RIGHT]) & 2)) { if (keyboardp.x < mapRightBound) keyboardp.y-=keyboardp.x&1, keyboardp.x++; }
-			else if ((keyState[SDLK_RETURN] | keyState[SDLK_KP_5] | keyState[SDLK_SPACE] | keyState[SDLK_KP_ENTER]) & 2)
+			if (((keyState[SDLK_q] | keyState[SDLK_KP_7]) & 2) || (hatPressed & SDL_HAT_LEFTUP) == SDL_HAT_LEFTUP) keyboardp.x--;
+			else if (((keyState[SDLK_d] | keyState[SDLK_KP_3]) & 2) || (hatPressed & SDL_HAT_RIGHTUP) == SDL_HAT_RIGHTUP) keyboardp.x++;
+			else if (((keyState[SDLK_e] | keyState[SDLK_KP_9]) & 2) || (hatPressed & SDL_HAT_LEFTDOWN) == SDL_HAT_LEFTDOWN) keyboardp.x++, keyboardp.y--;
+			else if (((keyState[SDLK_a] | keyState[SDLK_KP_1]) & 2) || (hatPressed & SDL_HAT_RIGHTDOWN) == SDL_HAT_RIGHTDOWN) keyboardp.x--, keyboardp.y++;
+			else if (((keyState[SDLK_w] | keyState[SDLK_KP_8] | keyState[SDLK_UP]) & 2) || (hatPressed & SDL_HAT_UP) == SDL_HAT_UP) keyboardp.y--;
+			else if (((keyState[SDLK_s] | keyState[SDLK_KP_2] | keyState[SDLK_DOWN]) & 2) || (hatPressed & SDL_HAT_DOWN) == SDL_HAT_DOWN) keyboardp.y++;
+			else if (((keyState[SDLK_LEFT]) & 2) || (hatPressed & SDL_HAT_LEFT) == SDL_HAT_LEFT) keyboardp.x--, keyboardp.y+=keyboardp.x&1;
+			else if (((keyState[SDLK_RIGHT]) & 2) || (hatPressed & SDL_HAT_RIGHT) == SDL_HAT_RIGHT) { if (keyboardp.x < mapRightBound) keyboardp.y-=keyboardp.x&1, keyboardp.x++; }
+			else if ((keyState[SDLK_RETURN] | keyState[SDLK_KP_5] | keyState[SDLK_SPACE] | keyState[SDLK_KP_ENTER] | joyState[JOYSTICK_SELECT]) & 2)
 			{
 				// Simulate user clicking on it...
 				Mouse(keyboardp.getScreenX()-scrollX, keyboardp.getScreenY()-scrollY, 0, 0, 1, 0, 0);
@@ -3858,6 +3868,13 @@ retry_pos:
 			else if (keyState[SDLK_UP] && !usedDiag) HandleKey('w', 0);
 			else if (keyState[SDLK_DOWN] && !usedDiag) HandleKey('s', 0);
 
+			else if ((hatState & SDL_HAT_LEFTUP) == SDL_HAT_LEFTUP) HandleKey('q', 0);
+			else if ((hatState & SDL_HAT_RIGHTUP) == SDL_HAT_RIGHTUP) HandleKey('e', 0);
+			else if ((hatState & SDL_HAT_LEFTDOWN) == SDL_HAT_LEFTDOWN) HandleKey('a', 0);
+			else if ((hatState & SDL_HAT_RIGHTDOWN) == SDL_HAT_RIGHTDOWN) HandleKey('d', 0);
+			else if ((hatState & SDL_HAT_UP) == SDL_HAT_UP) HandleKey('w', 0);
+			else if ((hatState & SDL_HAT_DOWN) == SDL_HAT_DOWN) HandleKey('s', 0);
+
 			else usedDiag = 0;
 		}
 	}
@@ -3894,6 +3911,52 @@ retry_pos:
 				return false;
 
 			return HandleKey(key, mod);
+		}
+	}
+	void JoyReleased(int button)
+	{
+		joyState[button] = 0;
+	}
+	bool JoyPressed(int button)
+	{
+		joyState[button] = 2;
+
+		if (activeMenu)
+		{
+			bool eat = activeMenu->JoyPressed(button);
+			if (!activeMenu)
+				joyState.clear();
+			return eat;
+		}
+		else
+		{
+			if (isFadeRendering)
+				return false;
+
+			if (button == JOYSTICK_PAUSE)
+			{
+				noMouse = 1;
+				new PauseMenu(isMap, progress.GetLevel(STARTING_LEVEL, true)->Completed(), progress.general.endSequence>=1, progress.general.endSequence>=2);
+			}
+
+
+			return false;
+		}
+	}
+	bool JoyHatMotion(Uint8 value)
+	{
+		hatState = value;
+
+		if (activeMenu)
+		{
+			bool eat = activeMenu->JoyHatMotion(value);
+			if (!activeMenu)
+				hatState = hatLast = SDL_HAT_CENTERED;
+			return eat;
+		}
+		else
+		{
+			return false;
 		}
 	}
 	bool HandleKey(int key, int mod)
@@ -3957,9 +4020,12 @@ retry_pos:
 		else if (key==SDLK_KP_5 || key==SDLK_SPACE || key==SDLK_RETURN || key==SDLK_KP_ENTER)
 		{
 			noMouse=1;
-			if (win && winFinal)
-				LoadMap(), keyState.clear();
-			else
+			if (win && winFinal) {
+				LoadMap();
+				keyState.clear();
+				joyState.clear();
+				hatState = hatLast = SDL_HAT_CENTERED;
+			} else
 				Input(-1);
 		}
 
