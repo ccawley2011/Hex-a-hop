@@ -92,17 +92,21 @@ String GetFilePath(const char* file, const char* flags)
 	extern String base_path;
 	String filename;
 
-#if defined(WIN32) || defined(__NDS__)
+#ifdef WIN32
 	filename = base_path + file;
 #else
 	if (strncmp(file, "save", 4) == 0)
 	{
+#ifndef __NDS__
 		const char *home = getenv("HOME");
 		if (!home || !home[0])
 		{
 			struct passwd *pw = getpwuid(getuid());
 			home = pw->pw_dir;
 		}
+#else
+		const char *home = ".";
+#endif
 		if (home)
 		{
 			char save_path[PATH_MAX];
