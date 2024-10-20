@@ -3,6 +3,7 @@
 *.nds
 .deps
 *.m4
+nitrofs/
 Makefile
 Makefile.in
 configure

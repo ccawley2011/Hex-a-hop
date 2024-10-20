@@ -108,18 +108,40 @@ set(
 		src/video.h
 )
 
+if(NINTENDO_DS)
+	set(
+		hah_data
+			data/DejaVuSans-Bold.ttf
+			data/levels.dat
+			data/nds/emi.png
+			data/nds/gradient.png
+			data/nds/map.png
+			data/nds/map_top.png
+			data/nds/tiles.png
+			data/nds/tiles_reflect.png
+			data/nds/title.png
+	)
+else(NINTENDO_DS)
+	set(
+		hah_data
+			data/DejaVuSans-Bold.ttf
+			data/emi.png
+			data/gradient.png
+			data/hex-a-hop-16.png
+			data/levels.dat
+			data/map.png
+			data/map_top.png
+			data/tiles.png
+			data/tiles_reflect.png
+			data/title.png
+	)
+endif(NINTENDO_DS)
+
 set(
-	hah_data
-		data/emi.dat
-		data/font.dat
-		data/gradient.dat
-		data/icon.bmp
-		data/levels.dat
-		data/map.dat
-		data/map_top.dat
-		data/music-ending-nonfree.ogg
-		data/music-game-nonfree-1.ogg
-		data/music-game-nonfree.ogg
+  hah_sound
+		data/music-ending.ogg
+		data/music-game-1.ogg
+		data/music-game.ogg
 		data/sound-builder-nonfree.ogg
 		data/sound-collapse-nonfree.ogg
 		data/sound-crack.ogg
@@ -138,9 +160,6 @@ set(
 		data/sound-used-antiice.ogg
 		data/sound-used-jump.ogg
 		data/sound-win.ogg
-		data/tiles.dat
-		data/tiles_reflect.dat
-		data/title.dat
 )
 
 set(
@@ -153,6 +172,7 @@ if(APPLE)
 		hex-a-hop MACOSX_BUNDLE
 			${hah_SRCS}
 			${hah_data}
+			${hah_sound}
 			${hah_RSRCS}
 	)
 
@@ -173,6 +193,7 @@ if(APPLE)
   )
   set_source_files_properties(
     ${hah_data}
+    ${hah_sound}
     PROPERTIES
       MACOSX_PACKAGE_LOCATION Resources/data
   )
@@ -194,12 +215,16 @@ target_link_libraries(
 
 if(NINTENDO_DS)
 	target_link_libraries(hex-a-hop freetype bz2 png z filesystem fat mm9)
+
+	file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/nitrofs)
+	file(INSTALL ${hah_data} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/nitrofs)
+
 	nds_create_rom(hex-a-hop
 		NAME "${hah_PACKAGENAME}"
 		SUBTITLE1 "${hah_DESCRIPTION}"
 		SUBTITLE2 "${hah_HOMEPAGE}"
-		ICON ${CMAKE_CURRENT_SOURCE_DIR}/data-nds/hex-a-hop-16.bmp
-		NITROFS ${CMAKE_CURRENT_SOURCE_DIR}/data-nds)
+		ICON ${CMAKE_CURRENT_SOURCE_DIR}/data/nds/icon.bmp
+		NITROFS ${CMAKE_CURRENT_BINARY_DIR}/nitrofs)
 endif(NINTENDO_DS)
 
 #####################################################################
