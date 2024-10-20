@@ -14,8 +14,11 @@
 
 static TTF_Font* font;
 
-#ifdef __NDS__
+#if defined(__NDS__) || defined(__3DS__)
 #define FONT_PATH "DejaVuSans-Bold.ttf"
+#endif
+
+#ifdef __NDS__
 #define FONT_SIZE 7
 #else
 #define FONT_SIZE 16
@@ -231,7 +234,7 @@ bool TextInit(const char* base)
 #endif
 		name = fontname;
 	else
-		name = dir + "/" + fontname;
+		name = dir + fontname;
 #else
 #error "Font path not configured, please use the --with-font-path configure argument"
 #endif

@@ -26,6 +26,9 @@
 #include <string.h>
 #include <stdarg.h>
 #include "video.h"
+#ifdef __3DS__
+#include <3ds.h>
+#endif
 
 // Forward compatibility with SDL2
 #if SDL_MAJOR_VERSION < 2
@@ -38,7 +41,7 @@
 #define SDLK_KP_9 SDLK_KP9
 #endif
 
-#ifdef __NDS__
+#if defined(__NDS__) || defined(__3DS__)
 #define JOYSTICK_PAUSE   0 /* Start */
 #define JOYSTICK_SELECT  1 /* A */
 #define JOYSTICK_BACK    2 /* B */
@@ -60,7 +63,17 @@
 
 static inline void FATAL(const char * string="Unknown", const char * string2="")
 {
+#ifdef __3DS__
+	errorConf errCnf;
+	char text[1024];
+
+	snprintf(text, 1024, "Fatal error: %s \"%s\"\n", string, string2);
+	errorInit(&errCnf, ERROR_TEXT_WORD_WRAP, CFG_LANGUAGE_EN);
+	errorText(&errCnf, text);
+	errorDisp(&errCnf);
+#else
 	fprintf(stderr, "Fatal error: %s \"%s\"\n", string, string2);
+#endif
 #ifdef __NDS__
 	while (1);
 #else

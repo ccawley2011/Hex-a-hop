@@ -399,8 +399,9 @@ private_concat_paths (const char* a,
 		return NULL;
 	}
 	strcpy (ret, a);
-	if (len0 && a[len0] != '/')
+	if (len0 && a[len0 - 1] != '/')
 		ret[len0++] = '/';
+
 	strcpy (ret + len0, b);
 	ret[len0 + len1] = '\0';
 

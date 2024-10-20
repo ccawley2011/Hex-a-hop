@@ -27,6 +27,8 @@
 #include <SDL_image.h>
 #ifdef __NDS__
 #include <filesystem.h>
+#elif defined(__3DS__)
+#include <3ds.h>
 #endif
 
 #ifdef WIN32
@@ -131,6 +133,12 @@ void InitScreen()
 		SDL_SWSURFACE | SDL_FULLSCREEN | SDL_BOTTOMSCR );
 
 	screen = realScreen;
+#elif defined(__3DS__)
+	realScreen = SDL_SetVideoMode(
+		SCREEN_W, SCREEN_H, 16, // Width, Height, BPP
+		SDL_SWSURFACE | SDL_FULLSCREEN | SDL_CONSOLETOP | SDL_BOTTOMSCR );
+
+	screen = realScreen;
 #else
 	realScreen = SDL_SetVideoMode(
 		SCREEN_W, SCREEN_H, // Width, Height
@@ -191,6 +199,11 @@ String GetBasePath()
 
 	base_path = "nitro:/";
 	return base_path;
+#elif defined(__3DS__)
+	romfsInit();
+
+	base_path = "romfs:/";
+	return base_path;
 #else
 	base_path = DATADIR "/";
 
@@ -236,12 +249,13 @@ int main(int /*argc*/, char * /*argv*/[])
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_NOPARACHUTE) < 0)
 		FATAL("Cannot initialize SDL", SDL_GetError());
-	if (!TextInit(base_path))
-		return 1;
 
 	InitScreen();
 
-	SDL_Surface* icon = IMG_Load(base_path + "/hex-a-hop-16.png");
+	if (!TextInit(base_path))
+		FATAL("Cannot initialize text");
+
+	SDL_Surface* icon = IMG_Load(base_path + "hex-a-hop-16.png");
 	if (icon)
 	{
 		SDL_SetColorKey(icon, SDL_SRCCOLORKEY, SDL_MapRGB(icon->format, 0, 255, 255));
@@ -491,5 +505,8 @@ int main(int /*argc*/, char * /*argv*/[])
 	FreeSound();
 	SDL_JoystickClose(joystick);
 	SDL_Quit();
+#ifdef __3DS__
+	romfsExit();
+#endif
 	return 0;
 }

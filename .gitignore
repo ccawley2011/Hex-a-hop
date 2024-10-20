@@ -1,9 +1,12 @@
 *.o
 *.elf
 *.nds
+*.3dsx
+*.smdh
 .deps
 *.m4
 nitrofs/
+romfs/
 Makefile
 Makefile.in
 configure

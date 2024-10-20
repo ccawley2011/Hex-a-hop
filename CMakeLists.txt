@@ -227,6 +227,21 @@ if(NINTENDO_DS)
 		NITROFS ${CMAKE_CURRENT_BINARY_DIR}/nitrofs)
 endif(NINTENDO_DS)
 
+if(NINTENDO_3DS)
+	target_link_libraries(hex-a-hop freetype bz2 png z jpeg mad vorbisidec ogg mikmod citro3d)
+
+	file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/romfs)
+	file(INSTALL ${hah_data} ${hah_sound} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/romfs)
+
+	ctr_generate_smdh(hex-a-hop.smdh
+		NAME "${hah_PACKAGENAME}"
+		DESCRIPTION "${hah_DESCRIPTION}"
+		ICON ${CMAKE_CURRENT_SOURCE_DIR}/data/3ds/icon.png)
+	ctr_create_3dsx(hex-a-hop
+		SMDH hex-a-hop.smdh
+		ROMFS ${CMAKE_CURRENT_BINARY_DIR}/romfs)
+endif(NINTENDO_3DS)
+
 #####################################################################
 # Installation
 #####################################################################

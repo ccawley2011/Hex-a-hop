@@ -97,7 +97,7 @@ String GetFilePath(const char* file, const char* flags)
 #else
 	if (strncmp(file, "save", 4) == 0)
 	{
-#ifndef __NDS__
+#if !defined(__NDS__) && !defined(__3DS__)
 		const char *home = getenv("HOME");
 		if (!home || !home[0])
 		{
@@ -4180,7 +4180,7 @@ retry_pos:
 	//	};
 	//	static SDL_Cursor * c = SDL_CreateCursor(data, mask, 32, 32, 1, 1);
 	//	SDL_SetCursor(c);
-#ifdef __NDS__
+#if defined(__NDS__) || defined(__3DS__)
 		SDL_ShowCursor(0);
 #else
 		SDL_ShowCursor(1);
